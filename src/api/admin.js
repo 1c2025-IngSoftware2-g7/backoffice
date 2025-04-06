@@ -11,8 +11,6 @@ export const createAdmin = async (adminData) => {
         body: JSON.stringify(adminData),
       });
   
-      console.log(jsonData);
-
       if (!response.ok) {
         console.log("Error creating admin:", response.statusText);
         throw new Error("Failed to create admin");

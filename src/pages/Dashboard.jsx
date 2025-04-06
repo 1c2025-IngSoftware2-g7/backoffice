@@ -6,15 +6,19 @@ const Dashboard = () => {
 
   const handleCreateAdmin = async () => {
 
-    // ejemplo
+    // // ejemplo
     const newAdmin = {
+      admin_email: "newadmin@example.com",
+      admin_password: "securePassword123",
+      name: "New",
+      surname: "Admin",
       email: "newadmin@example.com",
       password: "securePassword123",
     };
 
     try {
         const result = await createAdmin(newAdmin);
-        alert(`Admin ${result.name} created successfully!`);
+        alert(`Admin ${result.email} created successfully!`);
       } catch (err) {
         alert("There was an error creating the admin.");
       }
