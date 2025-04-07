@@ -8,8 +8,8 @@ const Dashboard = () => {
 
     // // ejemplo
     const newAdmin = {
-      admin_email: "newadmin@example.com",
-      admin_password: "securePassword123",
+      admin_email: "me@mail.com",
+      admin_password: "password",
       name: "New",
       surname: "Admin",
       email: "newadmin@example.com",
