@@ -37,7 +37,7 @@ const Users = () => {
     }, []);
 
       const columns = [
-        { field: "uuid", headerName: "ID"},
+        { field: "uuid", headerName: "ID", type:"number", headerAlign: "left"},
         { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell"},
         { field: "surname", headerName: "Surname", flex: 1, cellClassName: "name-column--cell" },
         { field: "email", headerName: "Email", flex: 3 },
@@ -145,8 +145,8 @@ const Users = () => {
                         color: colors.greenAccent[300]
                     },
                     "& .MuiDataGrid-columnHeader": {
-                        backgroundColor: colors.blueAccent[700],
-                        borderBottom: "none"
+                        backgroundColor: `${colors.blueAccent[700]} !important`,
+                        borderBottom: "none !important",
                     },
                     "& .MuiDataGrid-virtualScroller": {
                         backgroundColor: colors.primary[400]
@@ -154,9 +154,6 @@ const Users = () => {
                     "& .MuiDataGrid-footerContainer": {
                         borderTop: "none",
                         backgroundColor: colors.blueAccent[700]
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
                     },
                 }}
             >

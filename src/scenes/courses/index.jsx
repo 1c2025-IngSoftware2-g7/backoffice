@@ -10,7 +10,7 @@ import { getAllCourses } from "../../api/courses";
 import { useEffect, useState } from "react";
 import { mockCourses } from "../../mockData/mockCourses";
 
-const Users = () => {
+const Courses = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [courses, setCourses] = useState([]);
@@ -86,4 +86,4 @@ const Users = () => {
 
 }
 
-export default Users;
+export default Courses;
