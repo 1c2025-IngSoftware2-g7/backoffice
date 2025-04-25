@@ -4,11 +4,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
-import SecuritylinedIcon from '@mui/icons-material/SecurityOutlined';
 import HttpsOutlinedIcon from '@mui/icons-material/HttpsOutlined';
 import { getAllUsers } from "../../api/users";
 import { useEffect, useState } from "react";
 import { mockUsers } from "../../mockData/mockUsers";
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 
 const Users = () => {
     const theme = useTheme();
@@ -49,7 +50,12 @@ const Users = () => {
               display="flex"
               justifyContent="center"
               style={{
-                backgroundColor: role === "admin" ? colors.greenAccent[600] : colors.greenAccent[700],
+                backgroundColor: 
+                  role === "admin" ? 
+                  colors.greenAccent[500] : 
+                  role === "teacher" ?
+                  colors.greenAccent[600] :
+                  colors.greenAccent[700],
                 margin: "10px auto",
               }}
               borderRadius="4px"
@@ -68,17 +74,58 @@ const Users = () => {
           field: "status",
           headerName: "Status",
           flex: 1,
-          renderCell: ({ value }) => (
-            <span
-              style={{
-                color: value === "Active" ? "#388e3c" : "#d32f2f",
-                fontWeight: 600,
-              }}
-            >
-              {value}
-            </span>
-          ),
-        },
+          renderCell: ({ row }) => {
+            const isActive = row.status === "active";
+        
+            // Por ahora esta mockeado!!! conectar el back
+            const handleToggle = () => {
+              const updatedUsers = users.map((user) =>
+                user.uuid === row.uuid
+                  ? { ...user, status: isActive ? "inactive" : "active" }
+                  : user
+              );
+              setUsers(updatedUsers);
+            };
+        
+            return (
+              <Box
+                width="80%"
+                p="5px"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                style={{
+                  backgroundColor: isActive ? colors.greenAccent[600] : colors.redAccent[600],
+                  margin: "10px auto",
+                  cursor: "pointer",
+                }}
+                borderRadius="4px"
+                onClick={handleToggle}
+              >
+                {isActive ? <ThumbUpAltOutlinedIcon /> : <BlockOutlinedIcon />}
+                <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+                  {isActive ? "active" : "inactive"}
+                </Typography>
+              </Box>
+            );
+          },
+        }
+        // {
+        //   field: "status",
+        //   headerName: "Status",
+        //   flex: 1,
+        //   renderCell: ({ value }) => (
+        //     <span
+        //       style={{
+        //         color: value === "Active" ? "#388e3c" : "#d32f2f",
+        //         fontWeight: 600,
+        //       }}
+        //     >
+        //       {value}
+        //     </span>
+        //   ),
+        // },
+        
       ];
 
     return (
@@ -97,7 +144,7 @@ const Users = () => {
                     "& .name-column--cell": {
                         color: colors.greenAccent[300]
                     },
-                    "& .MuiDataGrid-columnHeaders": {
+                    "& .MuiDataGrid-columnHeader": {
                         backgroundColor: colors.blueAccent[700],
                         borderBottom: "none"
                     },
@@ -107,6 +154,9 @@ const Users = () => {
                     "& .MuiDataGrid-footerContainer": {
                         borderTop: "none",
                         backgroundColor: colors.blueAccent[700]
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
                     },
                 }}
             >

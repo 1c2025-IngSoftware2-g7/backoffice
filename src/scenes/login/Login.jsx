@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     navigate("/dashboard");
     try {
-    //   await login(email, password);
+      await login(email, password);
       navigate("/dashboard");
     } catch (err) {
       alert("Invalid email or password");

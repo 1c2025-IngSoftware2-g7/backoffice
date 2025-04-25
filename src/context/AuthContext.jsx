@@ -3,8 +3,6 @@
 
 // tenemos que usar cookies????
 
-// context/AuthContext.js
-
 import { createContext, useState, useContext, useEffect } from "react";
 import { loginUser, logoutUser } from "../api/users";
 

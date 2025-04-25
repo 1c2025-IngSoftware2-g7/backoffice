@@ -6,12 +6,13 @@ import Dashboard from "./scenes/dashboard/index";
 import Sidebar from "./scenes/global/Sidebar";
 import Users from "./scenes/users/index"
 import Courses from "./scenes/courses/index"
-import LoginModal from "./scenes/login/Login";
+import Login from "./scenes/login/Login";
 import { AuthProvider } from "./context/AuthContext";
 import AddAdmin from "./scenes/add_admin";
 
 function App() {
   const [theme, colorMode] = useMode();
+  // const { isAuthenticated } = useAuth();
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -23,11 +24,12 @@ function App() {
             <main className="content">
               <Topbar />
               <Routes>
-                <Route path="/" element={<LoginModal />} />
+                <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/admin" element={<AddAdmin />} />
+                <Route path="*" element={<Login />} />
               </Routes>
             </main>
           </div>

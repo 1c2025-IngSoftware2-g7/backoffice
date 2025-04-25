@@ -4,7 +4,8 @@ import { USERS } from "../api/back_services";
 
 export const loginUser = async (email, password) => {
     console.log("Logging in: ", email, password);
-    const res = await fetch(`${USERS}/users/login`, { ////////////falta /admin
+    // `${USERS}/users/login`
+    const res = await fetch("http://localhost:8080/users/login", { ////////////falta /admin
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
