@@ -19,26 +19,41 @@ const Courses = () => {
 
     useEffect(() => {
 
-        setCourses(mockCourses); /// eliminar cuando esta conectado el back
+        // setCourses(mockCourses); /// eliminar cuando esta conectado el back
 
-        // const fetchCourses = async () => {
-        //     try {
-        //         const data = await getAllCourses();
-        //         setCourses(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
+        const fetchCourses = async () => {
+            try {
+                const response = await getAllCourses();
+                setCourses(response);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
     
-        // fetchCourses();
+        fetchCourses();
     }, []);
 
+
+    // "_id": self._id,
+    // "name": self.name,
+    // "description": self.description,
+    // "max_students": self.max_students,
+    // "course_start_date": self.course_start_date,
+    // "course_end_date": self.course_end_date,
+    // "enroll_date_start": self.enroll_date_start,
+    // "enroll_date_end": self.enroll_date_end,
+    // "creator_id": self.creator_id,
+    // "creator_name": self.creator_name,
+    // "students": self.
+    // "resources": self.resources,
+    //         "correlatives_subjects_ids": self.correlatives_subjects_ids,
+    //     }
       const columns = [
-        { field: "course_id", headerName: "ID", type:"number", headerAlign: "left"},
+        { field: "_id", headerName: "ID", type:"number", headerAlign: "left"},
         { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell"},
-        { field: "creator_id", headerName: "Creator ID", type:"number", headerAlign: "left"},
+        { field: "creator_id", headerName: "Creator ID", felx:1, type:"number", headerAlign: "left"},
         { field: "creator_name", headerName: "Creator Name", flex: 1},
         { field: "max_students", headerName: "Max Students", type:"number", headerAlign: "left"},
         { field: "course_start_date", headerName: "Start Date"},
@@ -63,7 +78,7 @@ const Courses = () => {
                         color: colors.greenAccent[300]
                     },
                     "& .MuiDataGrid-columnHeader": {
-                        backgroundColor: colors.blueAccent[700],
+                        backgroundColor: `${colors.blueAccent[700]} !important`,
                         borderBottom: "none",
                     },
                     "& .MuiDataGrid-virtualScroller": {
@@ -78,7 +93,7 @@ const Courses = () => {
                 <DataGrid 
                     rows={courses}
                     columns={columns}
-                    getRowId={(row => row.course_id)}
+                    getRowId={(row => row._id)}
                 />
             </Box>
         </Box>

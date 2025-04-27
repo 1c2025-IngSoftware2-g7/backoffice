@@ -1,46 +1,22 @@
-// Checks if the user is logged in and provides a login and logout function
-// Uses Local Storage to persist the authentication state
-
-// tenemos que usar cookies????
-
-import { createContext, useState, useContext, useEffect } from "react";
-import { loginUser, logoutUser } from "../api/users";
-
+import { createContext, useContext, useState, useEffect } from 'react';
+import { getUserLoginData } from '../utils/storage'; 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isLogged, setIsLogged] = useState(false);
+  const [loggedUser, setLoggedUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (token && storedUser) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
+    // On app load, try to fetch user from storage
+    const user = getUserLoginData();
+    if (user) {
+      setIsLogged(true);
+      setLoggedUser(user);
     }
   }, []);
 
-  const login = async (email, password) => {
-    try {
-      const user = await loginUser(email, password);
-      setIsAuthenticated(true);
-      setUser(user);
-    } catch (err) {
-      console.error("Login failed:", err);
-      throw err;
-    }
-  };
-
-  const logout = () => {
-    logoutUser();
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isLogged, setIsLogged, loggedUser, setLoggedUser }}>
       {children}
     </AuthContext.Provider>
   );

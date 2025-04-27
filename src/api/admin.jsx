@@ -1,11 +1,11 @@
-const paths = require("./back_services");
+import { USERS } from "./back_services";
 
 // Connects to the backend to handle admin info
 
 // Current admin is able to create a new admin
 export const createAdmin = async (adminData) => {
     try {
-      const response = await fetch(paths.USERS, {
+      const response = await fetch(USERS+"/users/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -20,20 +20,20 @@ const Users = () => {
 
     useEffect(() => {
 
-      setUsers(mockUsers); /// eliminar cuando esta conectado el back
+      // setUsers(mockUsers); /// eliminar cuando esta conectado el back
 
-        // const fetchUsers = async () => {
-        //     try {
-        //         const data = await getAllUsers();
-        //         setUsers(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
+        const fetchUsers = async () => {
+            try {
+                const data = await getAllUsers();
+                setUsers(data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
     
-        // fetchUsers();
+        fetchUsers();
     }, []);
 
       const columns = [

@@ -17,7 +17,6 @@ import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useState } from "react";
 import Header from "../../components/Header";
-// import { createAdmin } from "../../api/admin"; // backend call if you have it
 
 const AddAdmin = () => {
   const theme = useTheme();

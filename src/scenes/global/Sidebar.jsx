@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {use, useState} from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -9,6 +9,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
+import { useAuth } from "../../context/AuthContext";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     const theme = useTheme();
@@ -34,6 +35,7 @@ const Sidebar = () => {
     const colors = tokens(theme.palette.mode);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard"); // which page we're in
+    const { loggedUser } = useAuth();
 
     return (
         <Box sx={{
@@ -99,7 +101,7 @@ const Sidebar = () => {
                             color={colors.greenAccent[500]} 
                             fontWeight="bold" 
                             sx={{ m: "20px 0 0 0" }}>
-                            EL NOMBRE
+                                {loggedUser ? `${loggedUser.name} ${loggedUser.surname}` : "Admin"}
                         </Typography>
                     </Box>
                     </Box>

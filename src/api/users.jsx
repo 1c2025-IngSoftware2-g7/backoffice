@@ -1,50 +1,45 @@
 // This file contains the API calls related to user management
 
-import { USERS } from "../api/back_services";
+import { USERS } from "./back_services";
 
+// Only Admin can login
 export const loginUser = async (email, password) => {
     console.log("Logging in: ", email, password);
     // `${USERS}/users/login`
-    const res = await fetch("http://localhost:8080/users/login", { ////////////falta /admin
+    // "http://localhost:8080/users/login"
+    const res = await fetch(`${USERS}/users/login`, { ////////////falta /admin
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            Accept: 'application/json',
+            "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
     });
 
       if (!res.ok) throw new Error("Invalid credentials");
 
-      const data = await res.json();
+      const response = await res.json();
+      console.log("Login response: ", response);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      return data.user;
+      return response;
   };
 
 
-export const logoutUser = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-};
-
-
 export const getAllUsers = async () => {
-
     const res = await fetch(`${USERS}/users`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            // "Authorization": `Bearer ${session}`,
         },
         // credentials: "include"  // send session cookies
     });
   
     if (!res.ok) {
-        console.error("Error fetching users:", res.statusText);
+        console.error("Error fetching users:", res.status);
         throw new Error("Failed to fetch users");
     }
   
-    const data = await res.json();
-    console.log(data)
-    return data;
+    const response = await res.json();
+    console.log("get all users:", response);
+    return response;
   };
