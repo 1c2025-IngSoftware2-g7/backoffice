@@ -1,11 +1,12 @@
-import { USERS } from "./back_services";
-
 // Connects to the backend to handle admin info
+
+import { USERS, GATEWAY } from "./back_services";
+
 
 // Current admin is able to create a new admin
 export const createAdmin = async (adminData) => {
     try {
-      const response = await fetch(USERS+"/users/admin", {
+      const response = await fetch(GATEWAY+"/users/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

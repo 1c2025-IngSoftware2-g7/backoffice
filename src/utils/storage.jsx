@@ -22,7 +22,7 @@ export const getUserLoginData = () => {
   }
 }
 
-export const logoutUser = () => {
+export const removeUserLoginData = () => {
   try {
     localStorage.removeItem(USER_DATA_FIELD);
   }

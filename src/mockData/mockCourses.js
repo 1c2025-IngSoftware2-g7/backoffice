@@ -1,6 +1,6 @@
 export const mockCourses = [
     {
-      "course_id": 1,
+      "_id": 1,
       "name": "Matemáticas Básicas",
       "description": "Curso introductorio a las matemáticas básicas.",
       "creator_id": 10,
@@ -10,7 +10,7 @@ export const mockCourses = [
       "course_end_date": "2023-12-15"
     },
     {
-      "course_id": 2,
+      "_id": 2,
       "name": "Historia Universal",
       "description": "Exploración de los eventos históricos más importantes.",
       "creator_id": 20,
@@ -21,7 +21,7 @@ export const mockCourses = [
 
     },
     {
-      "course_id": 3,
+      "_id": 3,
       "name": "Programación en Python",
       "description": "Aprende los fundamentos de la programación con Python.",
       "creator_id": 30,
@@ -31,7 +31,7 @@ export const mockCourses = [
       "course_end_date": "2023-12-15"
     },
     {
-      "course_id": 4,
+      "_id": 4,
       "name": "Física Avanzada",
       "description": "Curso avanzado sobre los principios de la física.",
       "creator_id": 40,
@@ -41,7 +41,7 @@ export const mockCourses = [
       "course_end_date": "2023-12-15"
     },
     {
-      "course_id": 5,
+      "_id": 5,
       "name": "Literatura Clásica",
       "description": "Análisis de las obras literarias clásicas más importantes.",
       "creator_id": 50,

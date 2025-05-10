@@ -1,9 +1,9 @@
 // This file contains the API calls related to courses management
 
-import { COURSES } from "./back_services";
+import { COURSES, GATEWAY } from "./back_services";
 
 export const getAllCourses = async () => {
-    const res = await fetch(`${COURSES}/courses`, {
+    const res = await fetch(`${GATEWAY}/courses`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

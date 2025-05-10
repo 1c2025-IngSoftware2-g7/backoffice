@@ -1,13 +1,13 @@
 // This file contains the API calls related to user management
 
-import { USERS } from "./back_services";
+import { USERS, GATEWAY } from "./back_services";
 
 // Only Admin can login
 export const loginUser = async (email, password) => {
     console.log("Logging in: ", email, password);
     // `${USERS}/users/login`
     // "http://localhost:8080/users/login"
-    const res = await fetch(`${USERS}/users/login`, { ////////////falta /admin
+    const res = await fetch(`${GATEWAY}/users/admin/login`, { 
         method: "POST",
         headers: { 
             Accept: 'application/json',
@@ -15,7 +15,12 @@ export const loginUser = async (email, password) => {
         body: JSON.stringify({ email, password }),
     });
 
-      if (!res.ok) throw new Error("Invalid credentials");
+    console.log("res", res);
+
+      if (!res.ok) {
+        console.error("Error logging in:", res);
+        throw new Error("Invalid credentials");
+      };
 
       const response = await res.json();
       console.log("Login response: ", response);
@@ -25,7 +30,7 @@ export const loginUser = async (email, password) => {
 
 
 export const getAllUsers = async () => {
-    const res = await fetch(`${USERS}/users`, {
+    const res = await fetch(`${GATEWAY}/users`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -34,6 +39,8 @@ export const getAllUsers = async () => {
         // credentials: "include"  // send session cookies
     });
   
+    console.log("res", res);
+
     if (!res.ok) {
         console.error("Error fetching users:", res.status);
         throw new Error("Failed to fetch users");

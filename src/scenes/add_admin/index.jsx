@@ -1,26 +1,14 @@
-// import { Box } from "@mui/material";
-// import Header from "../../components/Header";
-
-// const Dashboard = () => {
-//     return (
-//         <Box m="20px">
-//             <Box display="flex" justifyContent="space-between" alignItems="center">
-//                 <Header title="REGISTER ADMIN" subtitle="Add a new Admin" />
-//             </Box>
-//         </Box>
-//     )
-// }
-
-// export default Dashboard;
-
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useState } from "react";
 import Header from "../../components/Header";
+import { useAuth } from "../../context/AuthContext";
+import { createAdmin } from "../../api/admin";
 
 const AddAdmin = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { loggedUser } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -39,20 +27,18 @@ const AddAdmin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Hash password (simple example, in reality do it server-side)
-    const password_hashed = btoa(formData.password); // replace with proper hashing if needed
-
     const payload = {
       name: formData.name,
       surname: formData.surname,
       email: formData.email,
-      password: password_hashed,
+      password: formData.password,
+      admin_email: loggedUser.email,
+      admin_password: loggedUser.password,
     };
 
     try {
       console.log("Creating admin with:", payload);
-      // await createAdmin(payload);
-      // optionally reset the form
+      await createAdmin(payload);
       setFormData({ name: "", surname: "", email: "", password: "" });
       alert("Admin created!");
     } catch (err) {

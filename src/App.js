@@ -10,20 +10,23 @@ import Login from "./scenes/login/Login";
 import { AuthProvider } from "./context/AuthContext";
 import AddAdmin from "./scenes/add_admin";
 import PrivateRoute from "./private_route";
+import { useLocation } from "react-router-dom";
 
 
 function MainAppView() {
   const [theme, colorMode] = useMode();
+  const location = useLocation(); 
+  const isLoginPage = location.pathname === "/"; 
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <AuthProvider>
-        <CssBaseline />
+          <CssBaseline />
           <div className="app">
-            <Sidebar />
+            {!isLoginPage && <Sidebar />} {/* Sidebar solo si NO estás en login */}
             <main className="content">
-              <Topbar />
+              {!isLoginPage && <Topbar />} {/* Topbar solo si NO estás en login */}
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

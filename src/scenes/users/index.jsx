@@ -77,8 +77,18 @@ const Users = () => {
           renderCell: ({ row }) => {
             const isActive = row.status === "active";
         
-            // Por ahora esta mockeado!!! conectar el back
+            // Por ahora esta mockeado!!!!!!!!!!!!!!! conectar el back
             const handleToggle = () => {
+              if (isActive) {
+                const confirmed = window.confirm(`Are you sure you want to deactivate ${row.name} ${row.surname}?`);
+                if (!confirmed) return;
+              }
+
+              else if (!isActive) {
+                const confirmed = window.confirm(`Are you sure you want to activate ${row.name} ${row.surname}?`);
+                if (!confirmed) return; // si cancela, no hace nada
+              } 
+
               const updatedUsers = users.map((user) =>
                 user.uuid === row.uuid
                   ? { ...user, status: isActive ? "inactive" : "active" }

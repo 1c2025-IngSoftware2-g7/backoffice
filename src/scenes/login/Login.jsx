@@ -2,50 +2,85 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { loginUser } from "../../api/users";
-import { saveUserLoginData } from "../../utils/storage"; 
+import { saveUserLoginData } from "../../utils/storage";
+import Header from "../../components/Header";
+
+import { Box, Button, TextField, Typography, useTheme, Paper } from "@mui/material";
+import { tokens } from "../../theme";
 
 const Login = () => {
   const { setIsLogged, setLoggedUser } = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
+
     e.preventDefault();
     try {
-      // fetch request
-      let response = await loginUser(email, password);
-
-      // local storage
+      const response = await loginUser(email, password);
       await saveUserLoginData(response.data);
       setIsLogged(true);
       setLoggedUser(response.data);
-
       navigate("/dashboard");
     } catch (err) {
-      alert("Invalid email or password");
+      // alert("Invalid email or password");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Log In</button>
-    </form>
+    <Box
+      minHeight="100vh"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      bgcolor={colors.primary[400]}
+    >
+      <Box display="flex" flexDirection="column" alignItems="center" gap={3}>
+        <Header title="CLASSCONNECT" subtitle="Backoffice of app ClassConnect" center={true} />
+        <Paper elevation={6} sx={{ padding: 6, width: 400 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Login
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
+            <TextField
+              label="Email"
+              type="email"
+              variant="outlined"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <TextField
+              label="Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              Log In
+            </Button>
+          </Box>
+        </Paper>
+      </Box>
+    </Box>
   );
 };
 
