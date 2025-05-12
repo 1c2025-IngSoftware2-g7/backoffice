@@ -15,7 +15,6 @@
 
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -23,10 +22,62 @@ import PersonIcon from '@mui/icons-material/Person';
 import ClassIcon from '@mui/icons-material/Class';
 import ForumIcon from '@mui/icons-material/Forum';
 import LinkIcon from '@mui/icons-material/Link';
+import { useEffect, useState } from "react";
+import { getAllCourses } from "../../api/courses";
+import { getAllUsers } from "../../api/users";
+
+
+function getTotalAdmins(users) {
+  const totalAdmins = users.filter(user => user.role === "admin").length;
+  return totalAdmins;
+}
+
+function getTotalInactive(users) {
+  const totalInactive = users.filter(user => user.status === "inactive").length;
+  return totalInactive;
+}
+
+function getTotalActive(users) {
+  const totalActive = users.filter(user => user.status === "active").length;
+  return totalActive;
+}
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [totalCourses, setTotalCourses] = useState("loading");
+  const [totalUsers, setTotalUsers] = useState("loading");
+  const [totalForums, setTotalForums] = useState("loading");
+  const [totalAdmins, setTotalAdmins] = useState("loading");
+  const [totalInactive, setTotalInactive] = useState("loading");
+  const [totalActive, setTotalActive] = useState("loading");
+  
+      useEffect(() => {
+  
+          // setCourses(mockCourses); /// eliminar cuando esta conectado el back
+  
+          const fetchCourses = async () => {
+              try {
+                  const response = await getAllCourses();
+                  setTotalCourses(response.length);
+              }
+               catch (error) {
+                  console.error(error);
+              } 
+              try {
+                const response = await getAllUsers();
+                setTotalUsers(response.length);
+                setTotalAdmins(getTotalAdmins(response));
+                setTotalInactive(getTotalInactive(response));
+                setTotalActive(getTotalActive(response));
+            }
+             catch (error) {
+                console.error(error);
+            }
+          };
+      
+          fetchCourses();
+      }, []);
 
   const handleSeeLogs = () => {
     window.open("https://one.newrelic.com/logger?account=6733613&duration=1800000&state=c9a0123f-71bc-6113-d6d8-6d4efbbe2658", "_blank");
@@ -90,7 +141,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
+            title={totalUsers}
             subtitle="Total Users"
             // progress="0.50"
             // increase="+21%"
@@ -109,7 +160,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
+            title={totalCourses}
             subtitle="Total Courses"
             // progress="0.30"
             // increase="+5%"
@@ -128,7 +179,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
+            title={totalForums}
             subtitle="Total Forums"
             // progress="0.80"
             // increase="+43%"

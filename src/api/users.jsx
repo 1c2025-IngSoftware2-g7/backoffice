@@ -50,3 +50,20 @@ export const getAllUsers = async () => {
     console.log("get all users:", response);
     return response;
   };
+
+export const blockUser = async (userId) => {
+    const res = await fetch(`${GATEWAY}/users/${userId}/block`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!res.ok) {
+        console.error("Error blocking user:", res.status);
+        throw new Error("Failed to block user");
+    }
+
+    const response = await res.json();
+    return response;
+}
