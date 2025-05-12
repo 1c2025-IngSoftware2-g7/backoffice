@@ -1,18 +1,3 @@
-// import { Box } from "@mui/material";
-// import Header from "../../components/Header";
-
-// const Dashboard = () => {
-//     return (
-//         <Box m="20px">
-//             <Box display="flex" justifyContent="space-between" alignItems="center">
-//                 <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-//             </Box>
-//         </Box>
-//     )
-// }
-
-// export default Dashboard;
-
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -25,6 +10,8 @@ import LinkIcon from '@mui/icons-material/Link';
 import { useEffect, useState } from "react";
 import { getAllCourses } from "../../api/courses";
 import { getAllUsers } from "../../api/users";
+import UserStatusBarChart from "./UserStatusBarChart";
+import { mockUsers } from "../../mockData/mockUsers";
 
 
 function getTotalAdmins(users) {
@@ -33,30 +20,30 @@ function getTotalAdmins(users) {
 }
 
 function getTotalInactive(users) {
-  const totalInactive = users.filter(user => user.status === "inactive").length;
+  const totalInactive = users.filter(user => user.status === "inactive" && user.role !== "admin").length;
   return totalInactive;
 }
 
 function getTotalActive(users) {
-  const totalActive = users.filter(user => user.status === "active").length;
+  const totalActive = users.filter(user => user.status === "active" && user.role !== "admin").length;
   return totalActive;
 }
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [totalCourses, setTotalCourses] = useState("loading");
-  const [totalUsers, setTotalUsers] = useState("loading");
-  const [totalForums, setTotalForums] = useState("loading");
-  const [totalAdmins, setTotalAdmins] = useState("loading");
-  const [totalInactive, setTotalInactive] = useState("loading");
-  const [totalActive, setTotalActive] = useState("loading");
+  const [totalCourses, setTotalCourses] = useState("loading...");
+  const [totalUsers, setTotalUsers] = useState("loading...");
+  const [totalForums, setTotalForums] = useState("loading...");
+  const [totalAdmins, setTotalAdmins] = useState("loading...");
+  const [totalInactive, setTotalInactive] = useState(0);
+  const [totalActive, setTotalActive] = useState(0);
   
       useEffect(() => {
   
           // setCourses(mockCourses); /// eliminar cuando esta conectado el back
   
-          const fetchCourses = async () => {
+          const fetchData = async () => {
               try {
                   const response = await getAllCourses();
                   setTotalCourses(response.length);
@@ -65,7 +52,8 @@ const Dashboard = () => {
                   console.error(error);
               } 
               try {
-                const response = await getAllUsers();
+                // const response = await getAllUsers();
+                const response = mockUsers; // eliminar cuando esta conectado el back
                 setTotalUsers(response.length);
                 setTotalAdmins(getTotalAdmins(response));
                 setTotalInactive(getTotalInactive(response));
@@ -76,7 +64,7 @@ const Dashboard = () => {
             }
           };
       
-          fetchCourses();
+          fetchData();
       }, []);
 
   const handleSeeLogs = () => {
@@ -122,7 +110,7 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
+            title={totalAdmins}
             subtitle="Total Admins"
             // progress="0.75"
             // increase="+14%"
@@ -221,7 +209,8 @@ const Dashboard = () => {
               </Typography>
             </Box>
           </Box>
-          </Box>
+          <UserStatusBarChart active={totalActive} inactive={totalInactive} />
+        </Box>
       </Box>
     </Box>
   );
