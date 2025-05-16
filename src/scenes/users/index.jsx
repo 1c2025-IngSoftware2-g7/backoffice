@@ -78,8 +78,8 @@ const Users = () => {
           flex: 1,
           renderCell: ({ row }) => {
             const isActive = row.status === "active";
+            const isUnverified = row.status === "unverified";
         
-            // Por ahora esta mockeado!!!!!!!!!!!!!!! conectar el back
             const handleToggle = () => {
               if (isActive) {
                 const confirmed = window.confirm(`Are you sure you want to deactivate ${row.name} ${row.surname}?`);
@@ -114,7 +114,7 @@ const Users = () => {
                 justifyContent="center"
                 alignItems="center"
                 style={{
-                  backgroundColor: isActive ? colors.greenAccent[600] : colors.redAccent[600],
+                  backgroundColor: isActive ? colors.greenAccent[600] : isUnverified? colors.blueAccent[600] : colors.redAccent[600],
                   margin: "10px auto",
                   cursor: "pointer",
                 }}

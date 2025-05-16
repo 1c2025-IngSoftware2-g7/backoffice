@@ -53,13 +53,16 @@ export const getAllUsers = async () => {
   };
 
 export const changeUserStatus = async (adminData, userId) => {
+    console.log("Changing user status: ", adminData, userId);
     const res = await fetch(`${USERS}/users/admin/status`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, userId}),
+        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, uuid:userId}),
     });
+
+    console.log("res", res);
 
     if (!res.ok) {
         console.error("Error blocking user:", res.status);
