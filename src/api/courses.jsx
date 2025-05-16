@@ -3,7 +3,7 @@
 import { COURSES, GATEWAY } from "./back_services";
 
 export const getAllCourses = async () => {
-    const res = await fetch(`${COURSES}/courses`, {
+    const res = await fetch(`${COURSES}/courses/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
