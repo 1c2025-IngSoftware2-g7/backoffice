@@ -7,12 +7,13 @@ export const loginUser = async (email, password) => {
     console.log("Logging in: ", email, password);
     // `${USERS}/users/login`
     // "http://localhost:8080/users/login"
-    const res = await fetch(`${GATEWAY}/users/admin/login`, { 
+    const res = await fetch(`${USERS}/users/admin/login`, { 
         method: "POST",
         headers: { 
             Accept: 'application/json',
             "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include"  // send session cookies
     });
 
     console.log("res", res);
@@ -30,13 +31,13 @@ export const loginUser = async (email, password) => {
 
 
 export const getAllUsers = async () => {
-    const res = await fetch(`${GATEWAY}/users`, {
+    const res = await fetch(`${USERS}/users`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             // "Authorization": `Bearer ${session}`,
         },
-        // credentials: "include"  // send session cookies
+        credentials: "include"  // send session cookies
     });
   
     console.log("res", res);
@@ -51,12 +52,13 @@ export const getAllUsers = async () => {
     return response;
   };
 
-export const blockUser = async (userId) => {
-    const res = await fetch(`${GATEWAY}/users/${userId}/block`, {
+export const changeUserStatus = async (adminData, userId) => {
+    const res = await fetch(`${USERS}/users/admin/status`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
+        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, userId}),
     });
 
     if (!res.ok) {

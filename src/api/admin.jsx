@@ -6,13 +6,15 @@ import { USERS, GATEWAY } from "./back_services";
 // Current admin is able to create a new admin
 export const createAdmin = async (adminData) => {
     try {
-      const response = await fetch(GATEWAY+"/users/admin", {
+      const response = await fetch(`${USERS}/users/admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(adminData),
       });
+
+      console.log("Response from createAdmin:", response);
   
       if (!response.ok) {
         console.log("Error creating admin:", response.statusText);

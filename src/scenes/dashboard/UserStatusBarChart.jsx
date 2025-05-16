@@ -2,7 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 
-const UserStatusBarChart = ({ active, inactive }) => {
+const UserStatusBarChart = ({ active, inactive, unverified }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -11,6 +11,7 @@ const UserStatusBarChart = ({ active, inactive }) => {
       status: "",
       Active: active,
       Inactive: inactive,
+      Unverified: unverified,
     },
   ];
 
@@ -18,12 +19,12 @@ const UserStatusBarChart = ({ active, inactive }) => {
     <div style={{ height: 250 }}>
       <ResponsiveBar
         data={data}
-        keys={["Active", "Inactive"]}
+        keys={["Active", "Inactive", "Unverified"]}
         indexBy="status"
         groupMode="grouped"
         margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
         padding={0.3}
-        colors={({ id }) => (id === "Active" ? colors.greenAccent[500] : colors.redAccent[400])}
+        colors={({ id }) => (id === "Active" ? colors.greenAccent[500] : id === "Inactive" ? colors.redAccent[400]: colors.blueAccent[400])}
         theme={{
           axis: {
             domain: {

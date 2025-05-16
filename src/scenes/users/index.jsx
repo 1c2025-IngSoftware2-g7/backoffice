@@ -5,17 +5,19 @@ import Header from "../../components/Header";
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import HttpsOutlinedIcon from '@mui/icons-material/HttpsOutlined';
-import { getAllUsers } from "../../api/users";
+import { getAllUsers, changeUserStatus } from "../../api/users";
 import { useEffect, useState } from "react";
 import { mockUsers } from "../../mockData/mockUsers";
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
+import { useAuth } from "../../context/AuthContext";
 
 const Users = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { loggedUser } = useAuth();
 
 
     useEffect(() => {
@@ -25,7 +27,7 @@ const Users = () => {
         const fetchUsers = async () => {
             try {
                 const data = await getAllUsers();
-                setUsers(data);
+                setUsers(data.data);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -89,12 +91,19 @@ const Users = () => {
                 if (!confirmed) return; // si cancela, no hace nada
               } 
 
-              const updatedUsers = users.map((user) =>
-                user.uuid === row.uuid
-                  ? { ...user, status: isActive ? "inactive" : "active" }
-                  : user
-              );
-              setUsers(updatedUsers);
+              try {
+                changeUserStatus(loggedUser, row.uuid);
+                console.log("User status changed successfully");
+                const updatedUsers = users.map((user) =>
+                  user.uuid === row.uuid
+                    ? { ...user, status: isActive ? "inactive" : "active" }
+                    : user
+                );
+                setUsers(updatedUsers);
+              } catch (error) {
+                console.error("Error changing user status:", error);
+                alert("Error changing user status");
+              }
             };
         
             return (

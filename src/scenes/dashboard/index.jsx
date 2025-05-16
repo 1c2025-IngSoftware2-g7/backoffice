@@ -12,11 +12,17 @@ import { getAllCourses } from "../../api/courses";
 import { getAllUsers } from "../../api/users";
 import UserStatusBarChart from "./UserStatusBarChart";
 import { mockUsers } from "../../mockData/mockUsers";
+import { LOGS } from "../../api/back_services";
 
 
 function getTotalAdmins(users) {
   const totalAdmins = users.filter(user => user.role === "admin").length;
   return totalAdmins;
+}
+
+function getTotalUsers(users) {
+  const totalUsers = users.filter(user => user.role !== "admin").length;
+  return totalUsers;
 }
 
 function getTotalInactive(users) {
@@ -25,7 +31,12 @@ function getTotalInactive(users) {
 }
 
 function getTotalActive(users) {
-  const totalActive = users.filter(user => user.status === "active" && user.role !== "admin").length;
+  const totalActive = users.filter(user => (user.status === "active" || user.status === "enabled" )&& user.role !== "admin").length;
+  return totalActive;
+}
+
+function getTotalUnverified(users) {
+  const totalActive = users.filter(user => user.status === "unverified" && user.role !== "admin").length;
   return totalActive;
 }
 
@@ -38,6 +49,7 @@ const Dashboard = () => {
   const [totalAdmins, setTotalAdmins] = useState("loading...");
   const [totalInactive, setTotalInactive] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
+  const [totalUnverified, setTotalUnverified] = useState(0);
   
       useEffect(() => {
   
@@ -52,12 +64,14 @@ const Dashboard = () => {
                   console.error(error);
               } 
               try {
-                // const response = await getAllUsers();
-                const response = mockUsers; // eliminar cuando esta conectado el back
-                setTotalUsers(response.length);
-                setTotalAdmins(getTotalAdmins(response));
-                setTotalInactive(getTotalInactive(response));
-                setTotalActive(getTotalActive(response));
+                const response = await getAllUsers();
+                console.log("response data", response.data);
+                // const response = mockUsers; // eliminar cuando esta conectado el back
+                setTotalUsers(getTotalUsers(response.data));
+                setTotalAdmins(getTotalAdmins(response.data));
+                setTotalInactive(getTotalInactive(response.data));
+                setTotalActive(getTotalActive(response.data));
+                setTotalUnverified(getTotalUnverified(response.data));
             }
              catch (error) {
                 console.error(error);
@@ -68,7 +82,7 @@ const Dashboard = () => {
       }, []);
 
   const handleSeeLogs = () => {
-    window.open("https://one.newrelic.com/logger?account=6733613&duration=1800000&state=c9a0123f-71bc-6113-d6d8-6d4efbbe2658", "_blank");
+    window.open(LOGS, "_blank");
   };
 
   return (
@@ -209,7 +223,7 @@ const Dashboard = () => {
               </Typography>
             </Box>
           </Box>
-          <UserStatusBarChart active={totalActive} inactive={totalInactive} />
+          <UserStatusBarChart active={totalActive} inactive={totalInactive} unverified={totalUnverified}/>
         </Box>
       </Box>
     </Box>
