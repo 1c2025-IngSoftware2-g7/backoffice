@@ -47,6 +47,8 @@ const Courses = () => {
     // "correlatives_subjects_ids": self.correlatives_subjects_ids,
     //     }
       const columns = [
+        { field: "rowNumber", headerName: "#", flex: 0.5, headerAlign: "left", renderCell: (params) =>
+            `${params.api.getAllRowIds().indexOf(params.id) + 1}`},
         { field: "_id", headerName: "ID", type:"number", headerAlign: "left", flex: 1},
         { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell"},
         { field: "creator_id", headerName: "Creator ID", felx:1, type:"number", headerAlign: "left", flex: 1},

@@ -31,7 +31,13 @@ const Login = () => {
       setLoggedUser(response.data);
       navigate("/dashboard");
     } catch (err) {
-      // alert("Invalid email or password");
+      if (err.status == 404) {
+        alert("Email not found");
+      } else if (err.status == 403) {
+        alert("Password is incorrect");
+      }
+      setEmail("");
+      setPassword("");
     }
   };
 

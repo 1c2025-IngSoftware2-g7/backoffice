@@ -1,29 +1,29 @@
 // This file contains the API calls related to user management
 
 import { USERS, GATEWAY } from "./back_services";
+import { authFetch } from "./middleware";
 
 // Only Admin can login
 export const loginUser = async (email, password) => {
     console.log("Logging in: ", email, password);
-    // `${USERS}/users/login`
-    // "http://localhost:8080/users/login"
-    const res = await fetch(`${USERS}/users/admin/login`, { 
+    const res = await fetch(`${GATEWAY}/users/admin/login`, { 
         method: "POST",
         headers: { 
-            Accept: 'application/json',
+            // Accept: 'application/json',
             "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email, password: password }),
         credentials: "include"  // send session cookies
     });
 
-    console.log("res", res);
+    console.log("HOLAAAA res", res);
+    const response = await res.json();
 
       if (!res.ok) {
-        console.error("Error logging in:", res);
+        // response.json()
+        console.error("Error logging in:", response);
         throw new Error("Invalid credentials");
       };
 
-      const response = await res.json();
       console.log("Login response: ", response);
 
       return response;
@@ -31,11 +31,10 @@ export const loginUser = async (email, password) => {
 
 
 export const getAllUsers = async () => {
-    const res = await fetch(`${USERS}/users`, {
+    const res = await authFetch(`${GATEWAY}/users/admin`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            // "Authorization": `Bearer ${session}`,
         },
         credentials: "include"  // send session cookies
     });
@@ -54,12 +53,12 @@ export const getAllUsers = async () => {
 
 export const changeUserStatus = async (adminData, userId) => {
     console.log("Changing user status: ", adminData, userId);
-    const res = await fetch(`${USERS}/users/admin/status`, {
+    const res = await authFetch(`${GATEWAY}/users/admin/status`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, uuid:userId}),
+        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, uuid: userId}),
     });
 
     console.log("res", res);

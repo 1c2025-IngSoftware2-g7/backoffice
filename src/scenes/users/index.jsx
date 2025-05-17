@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { mockUsers } from "../../mockData/mockUsers";
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import { useAuth } from "../../context/AuthContext";
 
 const Users = () => {
@@ -39,6 +40,8 @@ const Users = () => {
     }, []);
 
       const columns = [
+        { field: "rowNumber", headerName: "#", flex: 0.5, headerAlign: "left", renderCell: (params) =>
+          `${params.api.getAllRowIds().indexOf(params.id) + 1}`},
         { field: "uuid", headerName: "ID", type:"number", headerAlign: "left"},
         { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell"},
         { field: "surname", headerName: "Surname", flex: 1, cellClassName: "name-column--cell" },
@@ -81,6 +84,10 @@ const Users = () => {
             const isUnverified = row.status === "unverified";
         
             const handleToggle = () => {
+              if (isUnverified) {
+                window.alert("This user is unverified. Please wait for the user to be verified.");
+                return;
+              }
               if (isActive) {
                 const confirmed = window.confirm(`Are you sure you want to deactivate ${row.name} ${row.surname}?`);
                 if (!confirmed) return;
@@ -121,30 +128,14 @@ const Users = () => {
                 borderRadius="4px"
                 onClick={handleToggle}
               >
-                {isActive ? <ThumbUpAltOutlinedIcon /> : <BlockOutlinedIcon />}
+                {isActive ? <ThumbUpAltOutlinedIcon /> : isUnverified ? <HourglassTopIcon/> : <BlockOutlinedIcon />}
                 <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                  {isActive ? "active" : "inactive"}
+                  {isActive ? "active" : isUnverified ? "unverified" : "inactive"}
                 </Typography>
               </Box>
             );
           },
         }
-        // {
-        //   field: "status",
-        //   headerName: "Status",
-        //   flex: 1,
-        //   renderCell: ({ value }) => (
-        //     <span
-        //       style={{
-        //         color: value === "Active" ? "#388e3c" : "#d32f2f",
-        //         fontWeight: 600,
-        //       }}
-        //     >
-        //       {value}
-        //     </span>
-        //   ),
-        // },
-        
       ];
 
     return (

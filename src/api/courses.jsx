@@ -1,15 +1,14 @@
 // This file contains the API calls related to courses management
 
 import { COURSES, GATEWAY } from "./back_services";
+import { authFetch } from "./middleware";
 
 export const getAllCourses = async () => {
-    const res = await fetch(`${COURSES}/courses/`, {
+    const res = await authFetch(`${COURSES}/courses/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-        
-        // credentials: "include"  // send session cookies
     });
 
     console.log("res", res);
