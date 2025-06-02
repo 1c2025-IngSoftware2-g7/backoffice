@@ -6,6 +6,7 @@ import { getAllCourses } from "../../api/courses";
 import { useEffect, useState } from "react";
 
 
+
 const Courses = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -95,6 +96,7 @@ const Courses = () => {
                     columns={columns}
                     getRowId={(row => row._id)}
                     loading={loading}
+                    showToolbar
                 />
 
             </Box>

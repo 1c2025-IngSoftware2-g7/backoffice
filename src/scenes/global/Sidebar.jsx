@@ -8,6 +8,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import { useAuth } from "../../context/AuthContext";
 
@@ -147,6 +148,13 @@ const Sidebar = () => {
                     <Item
                     title="Courses"
                     to="/courses"
+                    icon={<ClassOutlinedIcon/>}
+                    selected={selected}
+                    setSelected={setSelected}
+                    />
+                    <Item
+                    title="Aux Teachers"
+                    to="/auxteachers"
                     icon={<SchoolOutlinedIcon/>}
                     selected={selected}
                     setSelected={setSelected}

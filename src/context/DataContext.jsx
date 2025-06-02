@@ -1,0 +1,35 @@
+import { createContext, useContext, useEffect, useState } from "react";
+import { getAllCourses } from "../api/courses";
+import { getAllUsers } from "../api/users";
+
+const DataContext = createContext();
+
+export const DataProvider = ({ children }) => {
+  const [users, setUsers] = useState(null);
+  const [courses, setCourses] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const [usersRes, coursesRes] = await Promise.all([
+        getAllUsers(),
+        getAllCourses(),
+      ]);
+      setUsers(usersRes.data);
+      setCourses(coursesRes);
+    } catch (err) {
+      console.error("Error fetching data", err);
+    } 
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <DataContext.Provider value={{ users, courses, refreshData: fetchData }}>
+      {children}
+    </DataContext.Provider>
+  );
+};
+
+export const useData = () => useContext(DataContext);
