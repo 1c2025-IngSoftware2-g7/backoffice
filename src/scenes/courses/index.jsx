@@ -22,6 +22,7 @@ const Courses = () => {
             try {
                 const response = await getAllCourses();
                 setCourses(response);
+                console.log("response:", response)
             } catch (error) {
                 console.error(error);
             } finally {

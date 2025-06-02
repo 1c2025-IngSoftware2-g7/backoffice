@@ -31,6 +31,7 @@ export async function changeHelperPermissions(
     permissions
   ) {
     const endpointAdd = `${COURSES}/courses/assistants/${course_id}`
+    console.log('COURSE: ', course_id, ' HELPER: ', helper_id, 'PERMISSIONS: ', permissions)
 
     const response = await authFetch(endpointAdd, {
       method: 'PUT',
@@ -52,3 +53,25 @@ export async function changeHelperPermissions(
       )
     }
   }
+
+export async function requestHelperPermissions(helper_id, course_id) {
+  const endpoint = `${COURSES}/courses/assistants/${course_id}/assistant/${helper_id}`
+  console.log('COURSE: ', course_id, ' HELPER: ', helper_id)
+
+  const response = await authFetch(endpoint, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch permissions for helper ${helper_id} in course ${course_id}`
+    )
+  }
+
+  let res = await response.json()
+  return res
+}

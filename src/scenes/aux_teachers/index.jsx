@@ -2,12 +2,13 @@ import {Box, useTheme, Typography} from "@mui/material";
 import {tokens} from "../../theme";
 import { DataGrid, Toolbar, ToolbarButton } from "@mui/x-data-grid";
 import Header from "../../components/Header";
-import { getAllAuxTeachers, changeHelperPermissions } from "../../api/courses";
+import { requestHelperPermissions, changeHelperPermissions } from "../../api/courses";
 import { useEffect, useState } from "react";
 import { mockTeachers } from "../../mockData/mockTeachers"; // Mock data for testing, remove when connected to backend
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { useData } from "../../context/DataContext";
 
 const permissions = [
     'ModulesAndResources',
@@ -16,80 +17,103 @@ const permissions = [
     'Feedbacks'
 ]
 
+
+
 const AuxTeachers = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingPermissions, setLoadingPermissions] = useState({});
+    const { users, courses } = useData();
 
 
     useEffect(() => {
 
-        setTeachers(mockTeachers); /// eliminar cuando esta conectado el back
-        setLoading(false); // Remove this line when connected to backend
+        // setTeachers(mockTeachers); /// eliminar cuando esta conectado el back
+        // setLoading(false); // Remove this line when connected to backend
 
-        // const fetchCourses = async () => {
-        //     try {
-        //         const response = await getAllAuxTeachers();
-        //         setTeachers(response);
-        //     } catch (error) {
-        //         console.error(error);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
-    
-        // fetchCourses();
+      const fetchData = async () => {
+        try {
+          const rowsPromises = [];
+      
+          for (const course of courses) {
+            for (const assistantId of course.assistants) {
+              const user = users.find(u => u.uuid === assistantId);
+      
+              rowsPromises.push(
+                requestHelperPermissions(assistantId, course._id).then((permissions) => ({
+                  courseId: course._id,
+                  courseName: course.name,
+                  creatorId: course.creator_id,
+                  assistantId,
+                  assistantName: user?.name || "Unknown",
+                  permissions,
+                }))
+              );
+            }
+          }
+      
+          const assistantRows = await Promise.all(rowsPromises);
+          setTeachers(assistantRows);
+        } catch (error) {
+          console.error("Error loading data", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
     }, []);
 
 
       const columns = [
         { field: "rowNumber", headerName: "#", flex: 0.5, headerAlign: "left", renderCell: (params) =>
             `${params.api.getAllRowIds().indexOf(params.id) + 1}`},
-        { field: "_id", headerName: "Course ID", type:"number", headerAlign: "left", flex: 1},
-        { field: "course_name", headerName: "Course Name", flex: 2, cellClassName: "name-column--cell"},
-        // { field: "creator_id", headerName: "Creator ID", type:"number", headerAlign: "left", flex: 1},
-        { field: "uuid", headerName: "Teacher ID", type:"number", headerAlign: "left", flex: 1},
-        { field: "name", headerName: "Teacher Name", flex: 2, cellClassName: "name-column--cell"},
+        { field: "courseId", headerName: "Course ID", type:"number", headerAlign: "left", flex: 1},
+        { field: "courseName", headerName: "Course Name", flex: 2, cellClassName: "name-column--cell"},
+        { field: "assistantId", headerName: "Teacher ID", type:"number", headerAlign: "left", flex: 1},
+        { field: "assistantName", headerName: "Teacher Name", flex: 2, cellClassName: "name-column--cell"},
         ...permissions.map((permission) => ({
             field: permission,
-            headerName: permission == 'ModulesAndResources' ? 'Modules and Resources' : permission,
+            headerName: permission === 'ModulesAndResources' ? 'Modules and Resources' : permission,
             flex: 2,
             headerAlign: "center",
             align: "center",
             renderCell: ({ row }) => {
               const handleTogglePermission = async () => {
+                const key = `${row.courseId}-${row.assistantId}`;
+                setLoadingPermissions(prev => ({ ...prev, [key]: true }));
+
                 const currentValue = row.permissions[permission];
                 const newValue = !currentValue;
           
                 try {
-                  // Llamas a la API para cambiar el permiso
                   await changeHelperPermissions(
-                    row.uuid,
-                    row._id,
-                    row.creator_id,
-                    { permissions: { [permission]: newValue } }
+                    row.assistantId,
+                    row.courseId,
+                    row.creatorId,
+                    { [permission]: newValue }
                   );
+                  console.log(permission,":",newValue);
           
-                  // Actualizar estado localmente para reflejar el cambio en la UI
                   setTeachers((prevTeachers) =>
                     prevTeachers.map((teacher) =>
-                      teacher._id === row._id
-                        ? {
-                            ...teacher,
-                            permissions: {
-                              ...teacher.permissions,
-                              [permission]: newValue,
-                            },
-                          }
+                      teacher.assistantId === row.assistantId && teacher.courseId === row.courseId
+                        ? { ...teacher, permissions: { ...teacher.permissions, [permission]: newValue } }
                         : teacher
                     )
+                  
                   );
                 } catch (error) {
                   console.error('Error setting permissions:', error);
                   alert("Error updating permission. Please try again.");
+                } finally {
+                  setLoadingPermissions(prev => ({ ...prev, [key]: false }));
                 }
+
               };
+
+              const isLoading = loadingPermissions[`${row.courseId}-${row.assistantId}`] || false;
           
               return (
                 <Box
@@ -101,7 +125,9 @@ const AuxTeachers = () => {
                   style={{
                     backgroundColor: row.permissions[permission] ? colors.greenAccent[600] : colors.grey[600],
                     margin: "10px auto",
-                    cursor: "pointer",
+                    cursor: isLoading ? "wait" : "pointer",
+                    opacity: isLoading ? 0.6 : 1,
+                    pointerEvents: isLoading ? "none" : "auto",
                   }}
                   borderRadius="4px"
                   onClick={handleTogglePermission}
@@ -170,7 +196,7 @@ const AuxTeachers = () => {
                 <DataGrid 
                     rows={teachers}
                     columns={columns}
-                    getRowId={(row) => row._id + "-" + row.uuid}
+                    getRowId={(row) => row.courseId + "-" + row.assistantId}
                     loading={loading}
                     showToolbar
                 />
