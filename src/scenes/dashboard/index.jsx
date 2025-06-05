@@ -45,7 +45,7 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { users, courses } = useData();
+  const { users, courses, refreshData } = useData();
   
   const [totalUsers, setTotalUsers] = useState("loading...");
   const [totalCourses, setTotalCourses] = useState("loading...");
@@ -54,6 +54,12 @@ const Dashboard = () => {
   const [totalInactive, setTotalInactive] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
   const [totalUnverified, setTotalUnverified] = useState(0);
+
+  useEffect(() => {
+    if (!users || !courses) {
+      refreshData();
+    }
+  },[users, courses, refreshData]);
   
   useEffect(() => {
     if (!users) return;
