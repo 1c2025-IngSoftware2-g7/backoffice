@@ -25,19 +25,27 @@ const AuxTeachers = () => {
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingPermissions, setLoadingPermissions] = useState({});
-    const { users, courses } = useData();
+    const { users, courses, refreshData } = useData();
+
+    useEffect(() => {
+      if (!users || !courses) {
+        refreshData();
+      }
+    },[users, courses, refreshData]);
 
 
     useEffect(() => {
-
         // setTeachers(mockTeachers); /// eliminar cuando esta conectado el back
         // setLoading(false); // Remove this line when connected to backend
-
-      const fetchData = async () => {
+      if (!users || !courses) return;
+      
+      const loadTeachers = async () => {
         try {
           const rowsPromises = [];
       
           for (const course of courses) {
+            if (!course.assistants || course.assistants.length === 0) continue;
+
             for (const assistantId of course.assistants) {
               const user = users.find(u => u.uuid === assistantId);
       
@@ -62,8 +70,8 @@ const AuxTeachers = () => {
           setLoading(false);
         }
       };
-      fetchData();
-    }, []);
+      loadTeachers();
+    }, [users, courses]);
 
 
       const columns = [
@@ -140,26 +148,26 @@ const AuxTeachers = () => {
               );
             },
           })),
-          { field: "remove", headerName: "Remove", headerAlign: "left", flex: 2, renderCell: (params) => (
-            <Box
-              width="80%"
-              p="5px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="4px"
-              style={{
-                backgroundColor: colors.redAccent[600],
-                margin: "10px auto",
-                cursor: "pointer",
-              }}>
-                <RemoveCircleOutlineOutlinedIcon />
-                <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    Remove
-                  </Typography>
-              </Box>
-          )
-          }
+          // { field: "remove", headerName: "Remove", headerAlign: "left", flex: 2, renderCell: (params) => (
+          //   <Box
+          //     width="80%"
+          //     p="5px"
+          //     display="flex"
+          //     justifyContent="center"
+          //     alignItems="center"
+          //     borderRadius="4px"
+          //     style={{
+          //       backgroundColor: colors.redAccent[600],
+          //       margin: "10px auto",
+          //       cursor: "pointer",
+          //     }}>
+          //       <RemoveCircleOutlineOutlinedIcon />
+          //       <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+          //           Remove
+          //         </Typography>
+          //     </Box>
+          // )
+          // }
       ];
 
     return (
