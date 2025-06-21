@@ -5,6 +5,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [loggedUser, setLoggedUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // On app load, try to fetch user from storage
@@ -13,7 +14,10 @@ export const AuthProvider = ({ children }) => {
       setIsLogged(true);
       setLoggedUser(user);
     }
+    setLoading(false);
   }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, loggedUser, setLoggedUser }}>

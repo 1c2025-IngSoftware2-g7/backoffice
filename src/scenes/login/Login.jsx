@@ -1,6 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loginUser } from "../../api/users";
 import { saveUserLoginData } from "../../utils/storage";
 import Header from "../../components/Header";
@@ -10,13 +10,19 @@ import { Box, Button, TextField, Typography, useTheme, Paper } from "@mui/materi
 import { tokens } from "../../theme";
 
 const Login = () => {
-  const { setIsLogged, setLoggedUser } = useAuth();
+  const { isLogged, setIsLogged, setLoggedUser } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate("/dashboard");
+    }
+  }, [isLogged, navigate]);
 
   const handleSubmit = async (e) => {
     if (!email || !password) {

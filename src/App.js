@@ -22,64 +22,62 @@ function MainAppView() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <CssBaseline />
-          <div className="app">
-            {!isLoginPage && <Sidebar />}{" "}
-            {/* Sidebar solo si NO estás en login */}
-            <main className="content">
-              {!isLoginPage && <Topbar />}{" "}
-              {/* Topbar solo si NO estás en login */}
-              <DataProvider>
-                {/* Proveedor de datos globales */}
-                <Routes>
-                  <Route path="/" element={<Login />} />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <PrivateRoute>
-                        <Dashboard />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin"
-                    element={
-                      <PrivateRoute>
-                        <AddAdmin />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/users"
-                    element={
-                      <PrivateRoute>
-                        <Users />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/courses"
-                    element={
-                      <PrivateRoute>
-                        <Courses />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/auxteachers"
-                    element={
-                      <PrivateRoute>
-                        <AuxTeachers />
-                      </PrivateRoute>
-                    }
-                  />
-                  {/* <Route path="*" element={<PrivateRoute><NotFound /></PrivateRoute>} /> */}
-                </Routes>
-              </DataProvider>
-            </main>
-          </div>
-        </AuthProvider>
+        <CssBaseline />
+        <div className="app">
+          {!isLoginPage && <Sidebar />}{" "}
+          {/* Sidebar solo si NO estás en login */}
+          <main className="content">
+            {!isLoginPage && <Topbar />}{" "}
+            {/* Topbar solo si NO estás en login */}
+            <DataProvider>
+              {/* Proveedor de datos globales */}
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <PrivateRoute>
+                      <Dashboard />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <PrivateRoute>
+                      <AddAdmin />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/users"
+                  element={
+                    <PrivateRoute>
+                      <Users />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/courses"
+                  element={
+                    <PrivateRoute>
+                      <Courses />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/auxteachers"
+                  element={
+                    <PrivateRoute>
+                      <AuxTeachers />
+                    </PrivateRoute>
+                  }
+                />
+                {/* <Route path="*" element={<PrivateRoute><NotFound /></PrivateRoute>} /> */}
+              </Routes>
+            </DataProvider>
+          </main>
+        </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
