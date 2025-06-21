@@ -2,11 +2,11 @@ import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import PersonIcon from '@mui/icons-material/Person';
-import ClassIcon from '@mui/icons-material/Class';
-import ForumIcon from '@mui/icons-material/Forum';
-import LinkIcon from '@mui/icons-material/Link';
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import PersonIcon from "@mui/icons-material/Person";
+import ClassIcon from "@mui/icons-material/Class";
+import ForumIcon from "@mui/icons-material/Forum";
+import LinkIcon from "@mui/icons-material/Link";
 import { useEffect, useState } from "react";
 import { getAllCourses } from "../../api/courses";
 import { getAllUsers } from "../../api/users";
@@ -15,29 +15,36 @@ import { mockUsers } from "../../mockData/mockUsers";
 import { LOGS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
 
-
 function getTotalAdmins(users) {
-  const totalAdmins = users.filter(user => user.role === "admin").length;
+  const totalAdmins = users.filter((user) => user.role === "admin").length;
   return totalAdmins;
 }
 
 function getTotalUsers(users) {
-  const totalUsers = users.filter(user => user.role !== "admin").length;
+  const totalUsers = users.filter((user) => user.role !== "admin").length;
   return totalUsers;
 }
 
 function getTotalInactive(users) {
-  const totalInactive = users.filter(user => user.status === "inactive" && user.role !== "admin").length;
+  const totalInactive = users.filter(
+    (user) => user.status === "inactive" && user.role !== "admin"
+  ).length;
   return totalInactive;
 }
 
 function getTotalActive(users) {
-  const totalActive = users.filter(user => (user.status === "active" || user.status === "enabled" )&& user.role !== "admin").length;
+  const totalActive = users.filter(
+    (user) =>
+      (user.status === "active" || user.status === "enabled") &&
+      user.role !== "admin"
+  ).length;
   return totalActive;
 }
 
 function getTotalUnverified(users) {
-  const totalActive = users.filter(user => user.status === "unverified" && user.role !== "admin").length;
+  const totalActive = users.filter(
+    (user) => user.status === "unverified" && user.role !== "admin"
+  ).length;
   return totalActive;
 }
 
@@ -46,7 +53,7 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
 
   const { users, courses, refreshData } = useData();
-  
+
   const [totalUsers, setTotalUsers] = useState("loading...");
   const [totalCourses, setTotalCourses] = useState("loading...");
   const [totalForums, setTotalForums] = useState("loading...");
@@ -59,8 +66,8 @@ const Dashboard = () => {
     if (!users || !courses) {
       refreshData();
     }
-  },[users, courses, refreshData]);
-  
+  }, [users, courses, refreshData]);
+
   useEffect(() => {
     if (!users) return;
 
@@ -122,8 +129,6 @@ const Dashboard = () => {
           <StatBox
             title={totalAdmins}
             subtitle="Total Admins"
-            // progress="0.75"
-            // increase="+14%"
             icon={
               <AdminPanelSettingsIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -141,8 +146,6 @@ const Dashboard = () => {
           <StatBox
             title={totalUsers}
             subtitle="Total Users"
-            // progress="0.50"
-            // increase="+21%"
             icon={
               <PersonIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -160,29 +163,8 @@ const Dashboard = () => {
           <StatBox
             title={totalCourses}
             subtitle="Total Courses"
-            // progress="0.30"
-            // increase="+5%"
             icon={
               <ClassIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalForums}
-            subtitle="Total Forums"
-            // progress="0.80"
-            // increase="+43%"
-            icon={
-              <ForumIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }
@@ -219,7 +201,11 @@ const Dashboard = () => {
               </Typography>
             </Box>
           </Box>
-          <UserStatusBarChart active={totalActive} inactive={totalInactive} unverified={totalUnverified}/>
+          <UserStatusBarChart
+            active={totalActive}
+            inactive={totalInactive}
+            unverified={totalUnverified}
+          />
         </Box>
       </Box>
     </Box>
