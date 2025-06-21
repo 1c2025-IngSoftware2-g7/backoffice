@@ -17,8 +17,6 @@ const permissions = [
     'Feedbacks'
 ]
 
-
-
 const AuxTeachers = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -53,7 +51,7 @@ const AuxTeachers = () => {
                   courseName: course.name,
                   creatorId: course.creator_id,
                   assistantId,
-                  assistantName: user?.name || "Unknown",
+                  assistantName: user?.name +" "+ user?.surname || "Unknown",
                   permissions,
                 }))
               );
@@ -91,10 +89,10 @@ const AuxTeachers = () => {
                 const currentValue = row.permissions[permission];
 
                 if (currentValue) {
-                const confirmed = window.confirm(`Are you sure you want to give ${row.assistantName}'s ${permission} permissions?`);
+                const confirmed = window.confirm(`Are you sure you want to remove ${row.assistantName}'s ${permission} permissions?`);
                 if (!confirmed) return;
               } else {
-                const confirmed = window.confirm(`Are you sure you want to remove ${row.assistantName}'s ${permission} permissions?`);
+                const confirmed = window.confirm(`Are you sure you want to give ${row.assistantName}'s ${permission} permissions?`);
                 if (!confirmed) return;
               }
 
