@@ -4,7 +4,7 @@ import { COURSES, GATEWAY } from "./back_services";
 import { authFetch } from "./middleware";
 
 export const getAllCourses = async () => {
-    const res = await authFetch(`${GATEWAY}/courses/`, {
+    const res = await authFetch(`${COURSES}/courses/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export async function changeHelperPermissions(
     creator_id,
     permissions
   ) {
-    const endpointAdd = `${GATEWAY}/courses/assistants/${course_id}`
+    const endpointAdd = `${COURSES}/courses/assistants/${course_id}`
     console.log('COURSE: ', course_id, ' HELPER: ', helper_id, 'PERMISSIONS: ', permissions)
 
     const response = await authFetch(endpointAdd, {
@@ -55,7 +55,7 @@ export async function changeHelperPermissions(
   }
 
 export async function requestHelperPermissions(helper_id, course_id) {
-  const endpoint = `${GATEWAY}/courses/assistants/${course_id}/assistant/${helper_id}`
+  const endpoint = `${COURSES}/courses/assistants/${course_id}/assistant/${helper_id}`
   console.log('COURSE: ', course_id, ' HELPER: ', helper_id)
 
   const response = await authFetch(endpoint, {

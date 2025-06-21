@@ -87,10 +87,21 @@ const AuxTeachers = () => {
             align: "center",
             renderCell: ({ row }) => {
               const handleTogglePermission = async () => {
+
+                const currentValue = row.permissions[permission];
+
+                if (currentValue) {
+                const confirmed = window.confirm(`Are you sure you want to give ${row.assistantName}'s ${permission} permissions?`);
+                if (!confirmed) return;
+              } else {
+                const confirmed = window.confirm(`Are you sure you want to remove ${row.assistantName}'s ${permission} permissions?`);
+                if (!confirmed) return;
+              }
+
+
                 const key = `${row.courseId}-${row.assistantId}`;
                 setLoadingPermissions(prev => ({ ...prev, [key]: true }));
 
-                const currentValue = row.permissions[permission];
                 const newValue = !currentValue;
           
                 try {
