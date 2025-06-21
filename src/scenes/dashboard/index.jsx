@@ -13,6 +13,7 @@ import { getAllUsers } from "../../api/users";
 import UserStatusBarChart from "./UserStatusBarChart";
 import { mockUsers } from "../../mockData/mockUsers";
 import { LOGS } from "../../api/back_services";
+import { useData } from "../../context/DataContext";
 
 
 function getTotalAdmins(users) {
@@ -43,43 +44,38 @@ function getTotalUnverified(users) {
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [totalCourses, setTotalCourses] = useState("loading...");
+
+  const { users, courses, refreshData } = useData();
+  
   const [totalUsers, setTotalUsers] = useState("loading...");
+  const [totalCourses, setTotalCourses] = useState("loading...");
   const [totalForums, setTotalForums] = useState("loading...");
   const [totalAdmins, setTotalAdmins] = useState("loading...");
   const [totalInactive, setTotalInactive] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
   const [totalUnverified, setTotalUnverified] = useState(0);
+
+  useEffect(() => {
+    if (!users || !courses) {
+      refreshData();
+    }
+  },[users, courses, refreshData]);
   
-      useEffect(() => {
-  
-          // setCourses(mockCourses); /// eliminar cuando esta conectado el back
-  
-          const fetchData = async () => {
-              try {
-                  const response = await getAllCourses();
-                  setTotalCourses(response.length);
-              }
-               catch (error) {
-                  console.error(error);
-              } 
-              try {
-                const response = await getAllUsers();
-                console.log("response data", response.data);
-                // const response = mockUsers; // eliminar cuando esta conectado el back
-                setTotalUsers(getTotalUsers(response.data));
-                setTotalAdmins(getTotalAdmins(response.data));
-                setTotalInactive(getTotalInactive(response.data));
-                setTotalActive(getTotalActive(response.data));
-                setTotalUnverified(getTotalUnverified(response.data));
-            }
-             catch (error) {
-                console.error(error);
-            }
-          };
-      
-          fetchData();
-      }, []);
+  useEffect(() => {
+    if (!users) return;
+
+    setTotalUsers(getTotalUsers(users));
+    setTotalAdmins(getTotalAdmins(users));
+    setTotalInactive(getTotalInactive(users));
+    setTotalActive(getTotalActive(users));
+    setTotalUnverified(getTotalUnverified(users));
+  }, [users]);
+
+  useEffect(() => {
+    if (!courses) return;
+
+    setTotalCourses(courses.length);
+  }, [courses]);
 
   const handleSeeLogs = () => {
     window.open(LOGS, "_blank");

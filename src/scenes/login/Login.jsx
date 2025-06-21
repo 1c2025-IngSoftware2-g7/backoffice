@@ -1,21 +1,28 @@
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loginUser } from "../../api/users";
 import { saveUserLoginData } from "../../utils/storage";
 import Header from "../../components/Header";
+import {userErrors, serverErrors} from "../../utils/errors";
 
 import { Box, Button, TextField, Typography, useTheme, Paper } from "@mui/material";
 import { tokens } from "../../theme";
 
 const Login = () => {
-  const { setIsLogged, setLoggedUser } = useAuth();
+  const { isLogged, setIsLogged, setLoggedUser } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate("/dashboard");
+    }
+  }, [isLogged, navigate]);
 
   const handleSubmit = async (e) => {
     if (!email || !password) {
@@ -25,17 +32,30 @@ const Login = () => {
 
     e.preventDefault();
     try {
-      const response = await loginUser(email, password);
-      await saveUserLoginData(response.data);
+      const res = await loginUser(email, password);
+
+      // Revisa si la respuesta fue exitosa
+      if (!res.ok) {
+        if (res.status === userErrors.EMAIL_NOT_FOUND) {
+          alert("Email not found");
+        } else if (res.status === userErrors.PASSWORD_INCORRECT) {
+          alert("Password is incorrect");
+        } else {
+          alert(`Unexpected error: ${res.status}`);
+        }
+        setEmail("");
+        setPassword("");
+        return;
+      }
+      const response = await res.json();
+      console.log("Login successful:", response);
+      saveUserLoginData(response.data);
       setIsLogged(true);
       setLoggedUser(response.data);
       navigate("/dashboard");
     } catch (err) {
-      if (err.status == 404) {
-        alert("Email not found");
-      } else if (err.status == 403) {
-        alert("Password is incorrect");
-      }
+      console.log("Login error", err)
+      alert("There's been an error while logging in. Please try again later.");
       setEmail("");
       setPassword("");
     }

@@ -12,6 +12,7 @@ import { AuthProvider } from "./context/AuthContext";
 import AddAdmin from "./scenes/add_admin";
 import PrivateRoute from "./private_route";
 import { useLocation } from "react-router-dom";
+import { DataProvider } from "./context/DataContext";
 
 function MainAppView() {
   const [theme, colorMode] = useMode();
@@ -21,14 +22,15 @@ function MainAppView() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <CssBaseline />
-          <div className="app">
-            {!isLoginPage && <Sidebar />}{" "}
-            {/* Sidebar solo si NO estás en login */}
-            <main className="content">
-              {!isLoginPage && <Topbar />}{" "}
-              {/* Topbar solo si NO estás en login */}
+        <CssBaseline />
+        <div className="app">
+          {!isLoginPage && <Sidebar />}{" "}
+          {/* Sidebar solo si NO estás en login */}
+          <main className="content">
+            {!isLoginPage && <Topbar />}{" "}
+            {/* Topbar solo si NO estás en login */}
+            <DataProvider>
+              {/* Proveedor de datos globales */}
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route
@@ -36,6 +38,14 @@ function MainAppView() {
                   element={
                     <PrivateRoute>
                       <Dashboard />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <PrivateRoute>
+                      <AddAdmin />
                     </PrivateRoute>
                   }
                 />
@@ -56,14 +66,6 @@ function MainAppView() {
                   }
                 />
                 <Route
-                  path="/admin"
-                  element={
-                    <PrivateRoute>
-                      <AddAdmin />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
                   path="/auxteachers"
                   element={
                     <PrivateRoute>
@@ -73,9 +75,9 @@ function MainAppView() {
                 />
                 {/* <Route path="*" element={<PrivateRoute><NotFound /></PrivateRoute>} /> */}
               </Routes>
-            </main>
-          </div>
-        </AuthProvider>
+            </DataProvider>
+          </main>
+        </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

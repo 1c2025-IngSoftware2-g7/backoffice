@@ -1,5 +1,5 @@
 export const COURSES = "https://service-api-courses-a835.onrender.com";
-export const USERS= "https://service-api-users-jymh.onrender.com";
+export const USERS= "https://service-api-users-mviq.onrender.com";
 export const PROFILES = "https://service-api-profiles-oqhv.onrender.com";
 export const GATEWAY = "https://api-gateway-rsva.onrender.com"
 // export const GATEWAY = "http://34.70.105.50";

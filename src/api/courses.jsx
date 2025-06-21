@@ -4,7 +4,7 @@ import { COURSES, GATEWAY } from "./back_services";
 import { authFetch } from "./middleware";
 
 export const getAllCourses = async () => {
-    const res = await authFetch(`${COURSES}/courses/`, {
+    const res = await authFetch(`${GATEWAY}/courses/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -22,13 +22,16 @@ export const getAllCourses = async () => {
     return response;
   };
 
-  export async function changeHelperPermissions(
+export const getAllAuxTeachers = async () => {}
+
+export async function changeHelperPermissions(
     helper_id,
     course_id,
     creator_id,
     permissions
   ) {
-    const endpointAdd = `${COURSES}/courses/assistants/${course_id}`
+    const endpointAdd = `${GATEWAY}/courses/assistants/${course_id}`
+    console.log('COURSE: ', course_id, ' HELPER: ', helper_id, 'PERMISSIONS: ', permissions)
 
     const response = await authFetch(endpointAdd, {
       method: 'PUT',
@@ -50,3 +53,25 @@ export const getAllCourses = async () => {
       )
     }
   }
+
+export async function requestHelperPermissions(helper_id, course_id) {
+  const endpoint = `${GATEWAY}/courses/assistants/${course_id}/assistant/${helper_id}`
+  console.log('COURSE: ', course_id, ' HELPER: ', helper_id)
+
+  const response = await authFetch(endpoint, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch permissions for helper ${helper_id} in course ${course_id}`
+    )
+  }
+
+  let res = await response.json()
+  return res
+}

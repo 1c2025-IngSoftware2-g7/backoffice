@@ -14,20 +14,8 @@ export const loginUser = async (email, password) => {
         body: JSON.stringify({ email: email, password: password }),
         credentials: "include"  // send session cookies
     });
-
-    console.log("HOLAAAA res", res);
-    const response = await res.json();
-
-      if (!res.ok) {
-        // response.json()
-        console.error("Error logging in:", response);
-        throw new Error("Invalid credentials");
-      };
-
-      console.log("Login response: ", response);
-
-      return response;
-  };
+    return res
+};
 
 
 export const getAllUsers = async () => {

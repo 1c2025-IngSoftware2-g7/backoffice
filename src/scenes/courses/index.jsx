@@ -6,6 +6,7 @@ import { getAllCourses } from "../../api/courses";
 import { useEffect, useState } from "react";
 
 
+
 const Courses = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -15,12 +16,11 @@ const Courses = () => {
 
     useEffect(() => {
 
-        // setCourses(mockCourses); /// eliminar cuando esta conectado el back
-
         const fetchCourses = async () => {
             try {
                 const response = await getAllCourses();
                 setCourses(response);
+                console.log("response:", response)
             } catch (error) {
                 console.error(error);
             } finally {
@@ -31,21 +31,6 @@ const Courses = () => {
         fetchCourses();
     }, []);
 
-
-    // "_id": self._id,
-    // "name": self.name,
-    // "description": self.description,
-    // "max_students": self.max_students,
-    // "course_start_date": self.course_start_date,
-    // "course_end_date": self.course_end_date,
-    // "enroll_date_start": self.enroll_date_start,
-    // "enroll_date_end": self.enroll_date_end,
-    // "creator_id": self.creator_id,
-    // "creator_name": self.creator_name,
-    // "students": self.
-    // "resources": self.resources,
-    // "correlatives_subjects_ids": self.correlatives_subjects_ids,
-    //     }
       const columns = [
         { field: "rowNumber", headerName: "#", flex: 0.5, headerAlign: "left", renderCell: (params) =>
             `${params.api.getAllRowIds().indexOf(params.id) + 1}`},
@@ -56,7 +41,6 @@ const Courses = () => {
         { field: "max_students", headerName: "Max Students", type:"number", headerAlign: "left"},
         { field: "course_start_date", headerName: "Start Date"},
         { field: "course_end_date", headerName: "End Date"},
-        // { field: "description", headerName: "Description", flex: 3},
       ];
 
     return (
@@ -95,6 +79,7 @@ const Courses = () => {
                     columns={columns}
                     getRowId={(row => row._id)}
                     loading={loading}
+                    showToolbar
                 />
 
             </Box>
