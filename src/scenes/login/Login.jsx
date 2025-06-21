@@ -16,6 +16,7 @@ const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [errorMessage, setErrorMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     if (!email || !password) {
-      alert("Please fill in all fields");
+      setWarningMessage("Please fill in all fields");
       return;
     }
 
@@ -40,13 +41,10 @@ const Login = () => {
       if (!res.ok) {
         if (res.status === userErrors.EMAIL_NOT_FOUND) {
           setErrorMessage("Email not found");
-          // alert("Email not found");
         } else if (res.status === userErrors.PASSWORD_INCORRECT) {
           setErrorMessage("Password is incorrect");
-          // alert("Password is incorrect");
         } else {
           setErrorMessage(`Unexpected error: ${res.status}`)
-          // alert(`Unexpected error: ${res.status}`);
         }
         setEmail("");
         setPassword("");
@@ -68,7 +66,7 @@ const Login = () => {
       navigate("/dashboard");
     } catch (err) {
       console.log("Login error", err)
-      alert("There's been an error while logging in. Please try again later.");
+      setErrorMessage("There's been an error while logging in. Please try again later.");
       setEmail("");
       setPassword("");
     }
@@ -88,9 +86,18 @@ const Login = () => {
           <Typography variant="h4" align="center" gutterBottom>
             Login
           </Typography>
-          {errorMessage && (
+          {warningMessage ? (
             <Alert
               severity="warning"
+              onClose={() => setWarningMessage("")}
+              variant="filled"
+              sx={{ mb: 2 }}
+            >
+              {warningMessage}
+            </Alert>
+          ) : errorMessage && (
+            <Alert
+              severity="error"
               onClose={() => setErrorMessage("")}
               variant="filled"
               sx={{ mb: 2 }}

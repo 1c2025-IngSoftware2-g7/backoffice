@@ -171,6 +171,7 @@ const Users = () => {
                     rows={users}
                     columns={columns}
                     getRowId={(row => row.uuid)}
+                    showToolbar
                 />
             </Box>
         </Box>

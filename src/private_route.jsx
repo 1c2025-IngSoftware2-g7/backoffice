@@ -11,7 +11,6 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (loggedUser && loggedUser.role !== "admin") {
-    <Alert variant="filled" severity="error" onClose={() => {}}>You are not authorized to access this page.</Alert>
     return <Navigate to="/unutho" replace />;
   }
 

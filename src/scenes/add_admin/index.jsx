@@ -4,11 +4,14 @@ import { useState } from "react";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 import { createAdmin } from "../../api/admin";
+import { Alert } from "@mui/material";
 
 const AddAdmin = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { loggedUser } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("")
 
   const [formData, setFormData] = useState({
     name: "",
@@ -40,17 +43,17 @@ const AddAdmin = () => {
       console.log("Creating admin with:", payload);
       await createAdmin(payload);
       setFormData({ name: "", surname: "", email: "", password: "" });
-      alert("Admin created!");
+      setSuccessMessage("Admin created!")
     } catch (err) {
       console.error(err);
-      alert("Error creating admin");
+      setErrorMessage("Error creating admin");
     }
   };
 
   return (
     <Box m="20px">
       <Header title="REGISTER ADMIN" subtitle="Create a New Admin User" />
-
+      
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -62,6 +65,27 @@ const AddAdmin = () => {
           maxWidth: 400,
         }}
       >
+        {errorMessage ? (
+          <Alert
+            severity="warning"
+            onClose={() => setErrorMessage("")}
+            variant="filled"
+            sx={{ mb: 2 }}
+          >
+            {errorMessage}
+          </Alert>
+        ) : 
+        successMessage ? (
+          <Alert
+            severity="success"
+            onClose={() => setSuccessMessage("")}
+            variant="filled"
+            sx={{ mb: 2 }}
+          >
+            {successMessage}
+          </Alert>
+        ) : null
+        }
         <TextField
           label="First Name"
           variant="outlined"
