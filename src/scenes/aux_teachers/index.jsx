@@ -35,8 +35,6 @@ const AuxTeachers = () => {
 
 
     useEffect(() => {
-        // setTeachers(mockTeachers); /// eliminar cuando esta conectado el back
-        // setLoading(false); // Remove this line when connected to backend
       if (!users || !courses) return;
       
       const loadTeachers = async () => {
@@ -148,26 +146,6 @@ const AuxTeachers = () => {
               );
             },
           })),
-          // { field: "remove", headerName: "Remove", headerAlign: "left", flex: 2, renderCell: (params) => (
-          //   <Box
-          //     width="80%"
-          //     p="5px"
-          //     display="flex"
-          //     justifyContent="center"
-          //     alignItems="center"
-          //     borderRadius="4px"
-          //     style={{
-          //       backgroundColor: colors.redAccent[600],
-          //       margin: "10px auto",
-          //       cursor: "pointer",
-          //     }}>
-          //       <RemoveCircleOutlineOutlinedIcon />
-          //       <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-          //           Remove
-          //         </Typography>
-          //     </Box>
-          // )
-          // }
       ];
 
     return (
