@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { loginUser } from "../../api/users";
 import { saveUserLoginData } from "../../utils/storage";
 import Header from "../../components/Header";
-import {userErrors, serverErrors} from "../../utils/errors";
+import {userErrors, serverErrors} from "../../utils/errors";  
+import { Alert } from "@mui/material";
 
-import { Box, Button, TextField, Typography, useTheme, Paper } from "@mui/material";
+import { Box, Button, TextField, Typography, useTheme, Paper, responsiveFontSizes } from "@mui/material";
 import { tokens } from "../../theme";
 
 const Login = () => {
@@ -14,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,17 +39,28 @@ const Login = () => {
       // Revisa si la respuesta fue exitosa
       if (!res.ok) {
         if (res.status === userErrors.EMAIL_NOT_FOUND) {
-          alert("Email not found");
+          setErrorMessage("Email not found");
+          // alert("Email not found");
         } else if (res.status === userErrors.PASSWORD_INCORRECT) {
-          alert("Password is incorrect");
+          setErrorMessage("Password is incorrect");
+          // alert("Password is incorrect");
         } else {
-          alert(`Unexpected error: ${res.status}`);
+          setErrorMessage(`Unexpected error: ${res.status}`)
+          // alert(`Unexpected error: ${res.status}`);
         }
         setEmail("");
         setPassword("");
         return;
+      } 
+      const response = await res.json(); 
+
+      if (response.data.status === "inactive") {
+        setErrorMessage("You no longer have access to this page. Contact your administrator.");
+        setEmail("");
+        setPassword("");
+        return;
       }
-      const response = await res.json();
+      
       console.log("Login successful:", response);
       saveUserLoginData(response.data);
       setIsLogged(true);
@@ -75,6 +88,16 @@ const Login = () => {
           <Typography variant="h4" align="center" gutterBottom>
             Login
           </Typography>
+          {errorMessage && (
+            <Alert
+              severity="warning"
+              onClose={() => setErrorMessage("")}
+              variant="filled"
+              sx={{ mb: 2 }}
+            >
+              {errorMessage}
+            </Alert>
+          )}
           <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={3}>
             <TextField
               label="Email"

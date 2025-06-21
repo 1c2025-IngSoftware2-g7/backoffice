@@ -1,5 +1,4 @@
 // Local storage for Login data
-
 const USER_DATA_FIELD = 'user';
 
 export const saveUserLoginData = async (userData) => {

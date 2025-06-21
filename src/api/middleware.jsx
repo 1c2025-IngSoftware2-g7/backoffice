@@ -2,7 +2,7 @@
 
 'server'
 import { removeUserLoginData } from "../utils/storage";
-// import { useAuth } from "../context/AuthContext";
+import { Alert } from "@mui/material";
 
 let errorHandlers = []
 
@@ -76,9 +76,10 @@ export async function authFetch(url, options, message = null){
         console.warn("Unauthorized. Redirecting to login...");
         // window.location.href = "/";
         alert('You no longer have access to this page. Contact your administrator.');
+        // <Alert variant="filled" severity="warning" onClose={() => {}}>You no longer have access to this page. Contact your administrator.</Alert>
         removeUserLoginData();
         window.location.reload();
-        return;
+        throw error;
     }
 
     checkError(error)

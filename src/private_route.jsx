@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import { Alert } from "@mui/material"; 
+import { removeUserLoginData } from "./utils/storage";
 
 const PrivateRoute = ({ children }) => {
   const { isLogged, loggedUser } = useAuth();
@@ -9,13 +11,8 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (loggedUser && loggedUser.role !== "admin") {
-    alert('You are not authorized to access this page');
-    return <Navigate to="/" replace />;
-  }
-
-  if (loggedUser && loggedUser.status !== "active") {
-    alert('You no longer have access to this page. Contact your administrator.');
-    return <Navigate to="/" replace />;
+    <Alert variant="filled" severity="error" onClose={() => {}}>You are not authorized to access this page.</Alert>
+    return <Navigate to="/unutho" replace />;
   }
 
   return children; // If logged, show the page
