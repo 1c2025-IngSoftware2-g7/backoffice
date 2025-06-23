@@ -17,4 +17,4 @@ To run locally you'll need React 18.2.0
 npm run start
 ```
 
-Or you can just visit the hosted site at: https://backoffice-rbyl.onrender.com/dashboard
+Or you can just visit the hosted site at: https://backoffice-rbyl.onrender.com
