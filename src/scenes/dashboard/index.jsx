@@ -5,14 +5,11 @@ import StatBox from "../../components/StatBox";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import PersonIcon from "@mui/icons-material/Person";
 import ClassIcon from "@mui/icons-material/Class";
-import ForumIcon from "@mui/icons-material/Forum";
 import LinkIcon from "@mui/icons-material/Link";
+import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import { useEffect, useState } from "react";
-import { getAllCourses } from "../../api/courses";
-import { getAllUsers } from "../../api/users";
 import UserStatusBarChart from "./UserStatusBarChart";
-import { mockUsers } from "../../mockData/mockUsers";
-import { LOGS } from "../../api/back_services";
+import { LOGS, METRICS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
 
 function getTotalAdmins(users) {
@@ -56,7 +53,6 @@ const Dashboard = () => {
 
   const [totalUsers, setTotalUsers] = useState("loading...");
   const [totalCourses, setTotalCourses] = useState("loading...");
-  const [totalForums, setTotalForums] = useState("loading...");
   const [totalAdmins, setTotalAdmins] = useState("loading...");
   const [totalInactive, setTotalInactive] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
@@ -88,6 +84,10 @@ const Dashboard = () => {
     window.open(LOGS, "_blank");
   };
 
+  const handleSeeMetrics = () => {
+    window.open(METRICS, "_blank");
+  };
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -95,6 +95,20 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
         <Box>
+          <Button
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100],
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              marginRight: "20px",
+            }}
+            onClick={handleSeeMetrics}
+          >
+            <TimelineOutlinedIcon sx={{ mr: "10px" }} />
+            See Metrics
+          </Button>
           <Button
             sx={{
               backgroundColor: colors.blueAccent[700],

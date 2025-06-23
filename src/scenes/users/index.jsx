@@ -14,18 +14,18 @@ import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import { useAuth } from "../../context/AuthContext";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
+import { useData } from "../../context/DataContext";
 
 const Users = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [users, setUsers] = useState([]);
+  const { refreshUsers } = useData();
   const [loading, setLoading] = useState(true);
   const { loggedUser } = useAuth();
   const [snackbar, setSnackbar] = useState(null);
 
   useEffect(() => {
-    // setUsers(mockUsers); /// eliminar cuando esta conectado el back
-
     const fetchUsers = async () => {
       try {
         const data = await getAllUsers();
@@ -138,6 +138,7 @@ const Users = () => {
                 : user
             );
             setUsers(updatedUsers);
+            refreshUsers();
           } catch (error) {
             console.error("Error changing user status:", error);
             setSnackbar({

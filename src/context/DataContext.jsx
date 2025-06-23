@@ -24,7 +24,19 @@ export const DataProvider = ({ children }) => {
       setCourses(coursesRes);
     } catch (err) {
       console.error("Error fetching data", err);
-    } 
+    }
+  };
+
+  const refreshUsers = async () => {
+    if (!isLogged) {
+      return;
+    }
+    try {
+      const usersRes = await getAllUsers();
+      setUsers(usersRes.data);
+    } catch (err) {
+      console.error("Error refreshing users", err);
+    }
   };
 
   useEffect(() => {
@@ -32,7 +44,14 @@ export const DataProvider = ({ children }) => {
   }, [isLogged]);
 
   return (
-    <DataContext.Provider value={{ users, courses, refreshData: fetchData }}>
+    <DataContext.Provider
+      value={{
+        users,
+        courses,
+        refreshData: fetchData,
+        refreshUsers,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );
