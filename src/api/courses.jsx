@@ -20,6 +20,7 @@ export const getAllCourses = async () => {
     throw new Error("Failed to fetch users");
   }
   const response = await res.json();
+  console.log("ALL COURSES", response);
   return response;
 };
 

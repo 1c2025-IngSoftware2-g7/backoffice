@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 import UserStatusBarChart from "./UserStatusBarChart";
 import { LOGS, METRICS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
+import CourseInscriptionBarChart from "./CourseInscriptionBarChart";
+import InfoBox from "./infoBox";
+import AverageGradesBarChart from "./AverageGrades";
 
 function getTotalAdmins(users) {
   const totalAdmins = users.filter((user) => user.role === "admin").length;
@@ -133,61 +136,46 @@ const Dashboard = () => {
         gap="20px"
       >
         {/* ROW 1 */}
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalAdmins}
-            subtitle="Total Admins"
-            icon={
-              <AdminPanelSettingsIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalUsers}
-            subtitle="Total Users"
-            icon={
-              <PersonIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalCourses}
-            subtitle="Total Courses"
-            icon={
-              <ClassIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
+        <InfoBox
+          title={totalAdmins}
+          subtitle="Total Admins"
+          icon={
+            <AdminPanelSettingsIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
+        <InfoBox
+          title={totalUsers}
+          subtitle="Total Users"
+          icon={
+            <PersonIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
+        <InfoBox
+          title={totalCourses}
+          subtitle="Total Courses"
+          icon={
+            <ClassIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
+        <InfoBox
+          title={"TODO"}
+          subtitle="VER QUE HACER"
+          icon={
+            <ClassIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
 
         {/* ROW 2 */}
         <Box
-          gridColumn="span 8"
+          gridColumn="span 6"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
         >
@@ -221,6 +209,10 @@ const Dashboard = () => {
             unverified={totalUnverified}
           />
         </Box>
+        <CourseInscriptionBarChart />
+
+        {/* ROW 3 */}
+        <AverageGradesBarChart />
       </Box>
     </Box>
   );

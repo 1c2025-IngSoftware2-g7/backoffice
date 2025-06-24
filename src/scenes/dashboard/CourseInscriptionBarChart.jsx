@@ -1,17 +1,55 @@
+import { useEffect, useState } from "react";
 import { ResponsiveBar } from "@nivo/bar";
-import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import UserStatusBarChart from "./UserStatusBarChart";
 
-const UserStatusBarChart = ({ active, inactive, unverified }) => {
+const CourseInscriptionBarChart = ({ students, teachers }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  return (
+    <Box
+      gridColumn="span 6"
+      gridRow="span 2"
+      backgroundColor={colors.primary[400]}
+    >
+      <Box
+        mt="25px"
+        p="0 30px"
+        display="flex "
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Box>
+          <Typography variant="h5" fontWeight="600" color={colors.grey[100]}>
+            Teachers and Students
+          </Typography>
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            color={colors.greenAccent[500]}
+          >
+            Average Course Inscription
+          </Typography>
+        </Box>
+      </Box>
+      <BarChart students={9} teachers={2} />
+    </Box>
+  );
+};
+
+export default CourseInscriptionBarChart;
+
+const BarChart = ({ students, teachers }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const data = [
     {
       status: "",
-      Active: active,
-      Inactive: inactive,
-      Unverified: unverified,
+      Students: students,
+      Teachers: teachers,
     },
   ];
 
@@ -19,17 +57,13 @@ const UserStatusBarChart = ({ active, inactive, unverified }) => {
     <div style={{ height: 250 }}>
       <ResponsiveBar
         data={data}
-        keys={["Active", "Inactive", "Unverified"]}
+        keys={["Students", "Teachers"]}
         indexBy="status"
         groupMode="grouped"
         margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
         padding={0.3}
         colors={({ id }) =>
-          id === "Active"
-            ? colors.greenAccent[500]
-            : id === "Inactive"
-            ? colors.redAccent[400]
-            : colors.blueAccent[400]
+          id === "Students" ? colors.greenAccent[500] : colors.blueAccent[400]
         }
         theme={{
           axis: {
@@ -110,5 +144,3 @@ const UserStatusBarChart = ({ active, inactive, unverified }) => {
     </div>
   );
 };
-
-export default UserStatusBarChart;
