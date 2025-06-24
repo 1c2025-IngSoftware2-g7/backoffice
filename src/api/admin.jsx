@@ -3,31 +3,32 @@
 import { USERS, GATEWAY } from "./back_services";
 import { authFetch } from "./middleware";
 
-
 // Current admin is able to create a new admin
 export const createAdmin = async (adminData) => {
-    try {
-      const response = await authFetch(`${GATEWAY}/users/admin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adminData),
-      });
+  try {
+    const response = await authFetch(`${GATEWAY}/users/admin`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Skip-Session": "true",
+      },
+      body: JSON.stringify(adminData),
+    });
 
-      console.log("Response from createAdmin:", response);
-  
-      if (!response.ok) {
-        console.log("Error creating admin:", response.statusText);
-        throw new Error("Failed to create admin");
-      }
+    console.log("Response from createAdmin:", response);
 
-      console.log("Admin created successfully");
-  
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error creating admin:", error);
-      throw error;
+    if (!response.ok) {
+      console.log("Error creating admin:", response.statusText);
+      throw new Error("Failed to create admin");
     }
-  };
+
+    console.log("Admin created successfully");
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error creating admin:", error);
+    throw error;
+  }
+};

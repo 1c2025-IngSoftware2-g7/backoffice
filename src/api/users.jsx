@@ -5,57 +5,64 @@ import { authFetch } from "./middleware";
 
 // Only Admin can login
 export const loginUser = async (email, password) => {
-    console.log("Logging in: ", email, password);
-    const res = await fetch(`${GATEWAY}/users/admin/login`, { 
-        method: "POST",
-        headers: { 
-            // Accept: 'application/json',
-            "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, password: password }),
-        credentials: "include"  // send session cookies
-    });
-    return res
+  console.log("Logging in: ", email, password);
+  const res = await fetch(`${GATEWAY}/users/admin/login`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
+    },
+    body: JSON.stringify({ email: email, password: password }),
+  });
+  return res;
 };
 
-
 export const getAllUsers = async () => {
-    const res = await authFetch(`${GATEWAY}/users/admin`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "include"  // send session cookies
-    });
-  
-    console.log("res", res);
+  const res = await authFetch(`${GATEWAY}/users/admin`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
+    },
+  });
 
-    if (!res.ok) {
-        console.error("Error fetching users:", res.status);
-        throw new Error("Failed to fetch users");
-    }
-  
-    const response = await res.json();
-    console.log("get all users:", response);
-    return response;
-  };
+  console.log("res", res);
+
+  if (!res.ok) {
+    console.error("Error fetching users:", res.status);
+    throw new Error("Failed to fetch users");
+  }
+
+  const response = await res.json();
+  console.log("get all users:", response);
+  return response;
+};
 
 export const changeUserStatus = async (adminData, userId) => {
-    console.log("Changing user status: ", adminData, userId);
-    const res = await authFetch(`${GATEWAY}/users/admin/status`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ admin_email: adminData.email, admin_password: adminData.password, uuid: userId}),
-    });
+  console.log("Changing user status: ", adminData, userId);
+  const res = await authFetch(`${GATEWAY}/users/admin/status`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
+    },
+    body: JSON.stringify({
+      admin_email: adminData.email,
+      admin_password: adminData.password,
+      uuid: userId,
+    }),
+  });
 
-    console.log("res", res);
+  console.log("res", res);
 
-    if (!res.ok) {
-        console.error("Error blocking user:", res.status);
-        throw new Error("Failed to block user");
-    }
+  if (!res.ok) {
+    console.error("Error blocking user:", res.status);
+    throw new Error("Failed to block user");
+  }
 
-    const response = await res.json();
-    return response;
-}
+  const response = await res.json();
+  return response;
+};

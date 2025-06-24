@@ -4,74 +4,84 @@ import { COURSES, GATEWAY } from "./back_services";
 import { authFetch } from "./middleware";
 
 export const getAllCourses = async () => {
-    const res = await authFetch(`${COURSES}/courses/`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+  const res = await authFetch(`${GATEWAY}/courses`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
+    },
+  });
 
-    console.log("res", res);
-    
-  
-    if (!res.ok) {
-        console.error("Error fetching users:", res.status);
-        throw new Error("Failed to fetch users");
-    }
-    const response = await res.json();
-    return response;
-  };
+  console.log("res", res);
 
-export const getAllAuxTeachers = async () => {}
+  if (!res.ok) {
+    console.error("Error fetching users:", res.status);
+    throw new Error("Failed to fetch users");
+  }
+  const response = await res.json();
+  return response;
+};
+
+export const getAllAuxTeachers = async () => {};
 
 export async function changeHelperPermissions(
-    helper_id,
+  helper_id,
+  course_id,
+  creator_id,
+  permissions
+) {
+  const endpointAdd = `${GATEWAY}/courses/assistants/${course_id}`;
+  console.log(
+    "COURSE: ",
     course_id,
-    creator_id,
+    " HELPER: ",
+    helper_id,
+    "PERMISSIONS: ",
     permissions
-  ) {
-    const endpointAdd = `${COURSES}/courses/assistants/${course_id}`
-    console.log('COURSE: ', course_id, ' HELPER: ', helper_id, 'PERMISSIONS: ', permissions)
+  );
 
-    const response = await authFetch(endpointAdd, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        assistant_id: helper_id,
-        course_id: course_id,
-        owner_id: creator_id,
-        permissions: permissions,
-      }),
-    })
-  
-    if (!response.ok) {
-      throw new Error(
-        `Failed to update permissions for helper ${helper_id} in course ${course_id}`
-      )
-    }
+  const response = await authFetch(endpointAdd, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
+    },
+    body: JSON.stringify({
+      assistant_id: helper_id,
+      course_id: course_id,
+      owner_id: creator_id,
+      permissions: permissions,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to update permissions for helper ${helper_id} in course ${course_id}`
+    );
   }
+}
 
 export async function requestHelperPermissions(helper_id, course_id) {
-  const endpoint = `${COURSES}/courses/assistants/${course_id}/assistant/${helper_id}`
-  console.log('COURSE: ', course_id, ' HELPER: ', helper_id)
+  const endpoint = `${GATEWAY}/courses/assistants/${course_id}/assistant/${helper_id}`;
+  console.log("COURSE: ", course_id, " HELPER: ", helper_id);
 
   const response = await authFetch(endpoint, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Skip-Session": "true",
     },
-  })
+  });
 
   if (!response.ok) {
     throw new Error(
       `Failed to fetch permissions for helper ${helper_id} in course ${course_id}`
-    )
+    );
   }
 
-  let res = await response.json()
-  return res
+  let res = await response.json();
+  return res;
 }
