@@ -3,7 +3,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../../theme";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 
-const AverageGradesBarChart = ({ averages }) => {
+const AgesDistributionBarChart = ({ averages }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -21,17 +21,14 @@ const AverageGradesBarChart = ({ averages }) => {
     >
       <Box display="flex" flexDirection="column" justifyContent="center">
         <Typography variant="h5" fontWeight="600" color={colors.grey[100]}>
-          Across all Courses
+          Users Registered
         </Typography>
         <Typography
           variant="h3"
           fontWeight="bold"
           color={colors.greenAccent[500]}
         >
-          Average Final Grades
-        </Typography>
-        <Typography variant="h6" color={colors.grey[100]}>
-          Between 0-10
+          Age Distribution
         </Typography>
       </Box>
 
@@ -46,15 +43,13 @@ const AverageGradesBarChart = ({ averages }) => {
           sixty={20}
           seventy={15}
           eighty={10}
-          ninety={4}
-          onehundred={1}
         />
       </Box>
     </Box>
   );
 };
 
-export default AverageGradesBarChart;
+export default AgesDistributionBarChart;
 
 const BarChart = ({
   zero,
@@ -66,24 +61,20 @@ const BarChart = ({
   sixty,
   seventy,
   eighty,
-  ninety,
-  onehundred,
 }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const data = [
-    { label: "0", value: zero },
-    { label: "1", value: ten },
-    { label: "2", value: twenty },
-    { label: "3", value: thirty },
-    { label: "4", value: fourty },
-    { label: "5", value: fifty },
-    { label: "6", value: sixty },
-    { label: "7", value: seventy },
-    { label: "8", value: eighty },
-    { label: "9", value: ninety },
-    { label: "10", value: onehundred },
+    { label: "<15", value: zero },
+    { label: "15-19", value: ten },
+    { label: "20-24", value: twenty },
+    { label: "25-29", value: thirty },
+    { label: "30-34", value: fourty },
+    { label: "34-39", value: fifty },
+    { label: "40-49", value: sixty },
+    { label: "50-59", value: seventy },
+    { label: "60>", value: eighty },
   ];
 
   return (
@@ -144,30 +135,6 @@ const BarChart = ({
           legendOffset: -40,
         }}
         enableLabel={false}
-        // legends={[
-        //   {
-        //     dataFrom: "keys",
-        //     anchor: "bottom-right",
-        //     direction: "column",
-        //     justify: false,
-        //     translateX: 120,
-        //     translateY: 0,
-        //     itemsSpacing: 2,
-        //     itemWidth: 100,
-        //     itemHeight: 20,
-        //     itemDirection: "left-to-right",
-        //     itemOpacity: 0.85,
-        //     symbolSize: 20,
-        //     effects: [
-        //       {
-        //         on: "hover",
-        //         style: {
-        //           itemOpacity: 1,
-        //         },
-        //       },
-        //     ],
-        //   },
-        // ]}
         animate={true}
         motionStiffness={90}
         motionDamping={15}

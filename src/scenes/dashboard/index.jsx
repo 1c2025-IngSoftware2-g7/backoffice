@@ -13,7 +13,7 @@ import { LOGS, METRICS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
 import CourseInscriptionBarChart from "./CourseInscriptionBarChart";
 import InfoBox from "./infoBox";
-import AverageGradesBarChart from "./AverageGrades";
+import AgesDistributionBarChart from "./AgesChart";
 
 function getTotalAdmins(users) {
   const totalAdmins = users.filter((user) => user.role === "admin").length;
@@ -165,7 +165,7 @@ const Dashboard = () => {
         />
         <InfoBox
           title={"TODO"}
-          subtitle="VER QUE HACER"
+          subtitle="Active Users"
           icon={
             <ClassIcon
               sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -212,7 +212,16 @@ const Dashboard = () => {
         <CourseInscriptionBarChart />
 
         {/* ROW 3 */}
-        <AverageGradesBarChart />
+        <AgesDistributionBarChart />
+        <InfoBox
+          title={"TODO"}
+          subtitle="Activated Notifications"
+          icon={
+            <ClassIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
       </Box>
     </Box>
   );
