@@ -7,13 +7,16 @@ import PersonIcon from "@mui/icons-material/Person";
 import ClassIcon from "@mui/icons-material/Class";
 import LinkIcon from "@mui/icons-material/Link";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
-import { useEffect, useState } from "react";
+import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
+import { use, useEffect, useState } from "react";
 import UserStatusBarChart from "./UserStatusBarChart";
 import { LOGS, METRICS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
 import CourseInscriptionBarChart from "./CourseInscriptionBarChart";
 import InfoBox from "./infoBox";
 import AgesDistributionBarChart from "./AgesChart";
+import { useLocation } from "react-router-dom";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 function getTotalAdmins(users) {
   const totalAdmins = users.filter((user) => user.role === "admin").length;
@@ -48,18 +51,42 @@ function getTotalUnverified(users) {
   return totalActive;
 }
 
+function getTotalUsersWithoutProfile(totalUsers, profiles) {
+  const cant_profiles = profiles ? profiles.length : 0;
+  return totalUsers - cant_profiles;
+}
+
+function getPercentageActiveNotifs(users, totalUsers) {
+  if (totalUsers === 0) return 0;
+
+  const cant_active = users.filter((user) => user.notification === true).length;
+  return Math.round((cant_active / totalUsers) * 100);
+}
+
+function getPercentageActiveBiometrics(users, totalUsers) {
+  if (totalUsers === 0) return 0;
+
+  const cant_bio = users.filter((user) => user.id_biometric !== null).length;
+  return Math.round((cant_bio / totalUsers) * 100);
+}
+
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { users, courses, refreshData } = useData();
+  const { users, courses, profiles, refreshData } = useData();
+  const location = useLocation();
 
-  const [totalUsers, setTotalUsers] = useState("loading...");
-  const [totalCourses, setTotalCourses] = useState("loading...");
-  const [totalAdmins, setTotalAdmins] = useState("loading...");
+  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalCourses, setTotalCourses] = useState(null);
+  const [totalAdmins, setTotalAdmins] = useState(null);
+  const [totalProfileError, setTotalProfileError] = useState(null);
   const [totalInactive, setTotalInactive] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
   const [totalUnverified, setTotalUnverified] = useState(0);
+  const [percentageActiveNotifs, setPercentageActiveNotifs] = useState(null);
+  const [percentageActiveBiometrics, setPercentageActiveBiometrics] =
+    useState(null);
 
   useEffect(() => {
     if (!users || !courses) {
@@ -68,14 +95,32 @@ const Dashboard = () => {
   }, [users, courses, refreshData]);
 
   useEffect(() => {
-    if (!users) return;
+    refreshData();
+  }, [location.pathname]);
 
-    setTotalUsers(getTotalUsers(users));
-    setTotalAdmins(getTotalAdmins(users));
+  useEffect(() => {
+    if (!users || !Array.isArray(users)) return;
+
+    const totalUsersVal = getTotalUsers(users);
+    const totalAdminsVal = getTotalAdmins(users);
+
+    setTotalUsers(totalUsersVal);
+    setTotalAdmins(totalAdminsVal);
     setTotalInactive(getTotalInactive(users));
     setTotalActive(getTotalActive(users));
     setTotalUnverified(getTotalUnverified(users));
-  }, [users]);
+
+    if (Array.isArray(profiles)) {
+      setTotalProfileError(
+        getTotalUsersWithoutProfile(totalUsersVal, profiles)
+      );
+    }
+
+    setPercentageActiveNotifs(getPercentageActiveNotifs(users, totalUsersVal));
+    setPercentageActiveBiometrics(
+      getPercentageActiveBiometrics(users, totalUsersVal)
+    );
+  }, [users, profiles]);
 
   useEffect(() => {
     if (!courses) return;
@@ -137,7 +182,7 @@ const Dashboard = () => {
       >
         {/* ROW 1 */}
         <InfoBox
-          title={totalAdmins}
+          title={totalAdmins ?? "loading..."}
           subtitle="Total Admins"
           icon={
             <AdminPanelSettingsIcon
@@ -146,7 +191,7 @@ const Dashboard = () => {
           }
         />
         <InfoBox
-          title={totalUsers}
+          title={totalUsers ?? "loading..."}
           subtitle="Total Users"
           icon={
             <PersonIcon
@@ -155,7 +200,7 @@ const Dashboard = () => {
           }
         />
         <InfoBox
-          title={totalCourses}
+          title={totalCourses ?? "loading..."}
           subtitle="Total Courses"
           icon={
             <ClassIcon
@@ -164,11 +209,12 @@ const Dashboard = () => {
           }
         />
         <InfoBox
-          title={"TODO"}
-          subtitle="Active Users"
+          title={totalProfileError ?? "loading..."}
+          subtitle="Users without Profile"
+          error={true}
           icon={
-            <ClassIcon
-              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            <ErrorOutlinedIcon
+              sx={{ color: colors.redAccent[600], fontSize: "26px" }}
             />
           }
         />
@@ -213,9 +259,24 @@ const Dashboard = () => {
 
         {/* ROW 3 */}
         <AgesDistributionBarChart />
+
         <InfoBox
-          title={"TODO"}
+          title={
+            percentageActiveNotifs !== null
+              ? percentageActiveNotifs + "%"
+              : "loading..."
+          }
           subtitle="Activated Notifications"
+          icon={
+            <NotificationsActiveIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
+          }
+        />
+
+        <InfoBox
+          title={"CHECK"}
+          subtitle="Activated Biometrics"
           icon={
             <ClassIcon
               sx={{ color: colors.greenAccent[600], fontSize: "26px" }}

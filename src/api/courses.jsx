@@ -16,8 +16,8 @@ export const getAllCourses = async () => {
   console.log("res", res);
 
   if (!res.ok) {
-    console.error("Error fetching users:", res.status);
-    throw new Error("Failed to fetch users");
+    console.error("Error fetching courses:", res.status);
+    throw new Error("Failed to fetch courses");
   }
   const response = await res.json();
   console.log("ALL COURSES", response);

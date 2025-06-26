@@ -2,7 +2,7 @@ import { Box, useTheme } from "@mui/material";
 import StatBox from "../../components/StatBox";
 import { tokens } from "../../theme";
 
-const InfoBox = ({ title, subtitle, icon }) => {
+const InfoBox = ({ title, subtitle, icon, error }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -13,7 +13,7 @@ const InfoBox = ({ title, subtitle, icon }) => {
       alignItems="center"
       justifyContent="center"
     >
-      <StatBox title={title} subtitle={subtitle} icon={icon} />
+      <StatBox title={title} subtitle={subtitle} icon={icon} error={error} />
     </Box>
   );
 };
