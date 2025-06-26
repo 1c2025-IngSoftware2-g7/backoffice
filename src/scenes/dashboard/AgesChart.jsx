@@ -2,10 +2,79 @@ import { useEffect, useState } from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../../theme";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { useData } from "../../context/DataContext";
 
-const AgesDistributionBarChart = ({ averages }) => {
+function calculateAge(birthday) {
+  const today = new Date();
+  const birthDate = new Date(birthday);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+export function useAgeBins(profiles, refreshData) {
+  const [bins, setBins] = useState({
+    notSpecified: 0,
+    lessThan15: 0,
+    from15To19: 0,
+    from20To24: 0,
+    from25To29: 0,
+    from30To34: 0,
+    from35To44: 0,
+    from45To54: 0,
+    moreThan55: 0,
+  });
+
+  useEffect(() => {
+    if (!profiles) {
+      refreshData();
+      return;
+    }
+
+    const newBins = {
+      notSpecified: 0,
+      lessThan15: 0,
+      from15To19: 0,
+      from20To24: 0,
+      from25To29: 0,
+      from30To34: 0,
+      from35To44: 0,
+      from45To54: 0,
+      moreThan55: 0,
+    };
+
+    for (const profile of profiles) {
+      if (!profile.birthday) {
+        newBins.notSpecified++;
+        continue;
+      }
+
+      const age = calculateAge(profile.birthday);
+
+      if (age < 15) newBins.lessThan15++;
+      else if (age < 20) newBins.from15To19++;
+      else if (age < 25) newBins.from20To24++;
+      else if (age < 30) newBins.from25To29++;
+      else if (age < 35) newBins.from30To34++;
+      else if (age < 45) newBins.from35To44++;
+      else if (age < 55) newBins.from45To54++;
+      else newBins.moreThan55++;
+    }
+
+    setBins(newBins);
+  }, [profiles, refreshData]);
+
+  return bins;
+}
+
+const AgesDistributionBarChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { profiles, refreshData } = useData();
+  const bins = useAgeBins(profiles, refreshData);
 
   return (
     <Box
@@ -33,17 +102,7 @@ const AgesDistributionBarChart = ({ averages }) => {
       </Box>
 
       <Box flex="1" ml={4}>
-        <BarChart
-          zero={0}
-          ten={0}
-          twenty={5}
-          thirty={10}
-          fourty={15}
-          fifty={20}
-          sixty={20}
-          seventy={15}
-          eighty={10}
-        />
+        <BarChart bins={bins} />
       </Box>
     </Box>
   );
@@ -51,30 +110,20 @@ const AgesDistributionBarChart = ({ averages }) => {
 
 export default AgesDistributionBarChart;
 
-const BarChart = ({
-  zero,
-  ten,
-  twenty,
-  thirty,
-  fourty,
-  fifty,
-  sixty,
-  seventy,
-  eighty,
-}) => {
+const BarChart = ({ bins }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const data = [
-    { label: "<15", value: zero },
-    { label: "15-19", value: ten },
-    { label: "20-24", value: twenty },
-    { label: "25-29", value: thirty },
-    { label: "30-34", value: fourty },
-    { label: "34-39", value: fifty },
-    { label: "40-49", value: sixty },
-    { label: "50-59", value: seventy },
-    { label: "60>", value: eighty },
+    { label: "Not Specified", value: bins.notSpecified },
+    { label: "<15", value: bins.lessThan15 },
+    { label: "15-19", value: bins.from15To19 },
+    { label: "20-24", value: bins.from20To24 },
+    { label: "25-29", value: bins.from25To29 },
+    { label: "30-34", value: bins.from30To34 },
+    { label: "35-44", value: bins.from35To44 },
+    { label: "45-55", value: bins.from45To54 },
+    { label: "55>", value: bins.moreThan55 },
   ];
 
   return (
