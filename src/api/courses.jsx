@@ -86,3 +86,54 @@ export async function requestHelperPermissions(helper_id, course_id) {
   let res = await response.json();
   return res;
 }
+
+export async function getEnrolledCoursesForUser(user_id) {
+  const endpoint = `${GATEWAY}/courses/enrolled_courses/${encodeURIComponent(
+    user_id
+  )}`;
+
+  console.log("GET ENROLL COURSES FOR ID ", user_id, "? endpoint ", endpoint);
+
+  try {
+    const response = await authFetch(
+      endpoint,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-Skip-Session": "true",
+        },
+      },
+      "failed request of courses"
+    );
+    return await response.json();
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getOwnedCoursesForUser(user_id) {
+  const endpoint = `${GATEWAY}/courses/courses_owned/${encodeURIComponent(
+    user_id
+  )}`;
+
+  try {
+    const response = await authFetch(
+      endpoint,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-Skip-Session": "true",
+        },
+      },
+      "failed request of courses"
+    );
+
+    return await response.json();
+  } catch (error) {
+    return [];
+  }
+}

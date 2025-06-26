@@ -3,10 +3,63 @@ import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../../theme";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import UserStatusBarChart from "./UserStatusBarChart";
+import { useData } from "../../context/DataContext";
+import {
+  getEnrolledCoursesForUser,
+  getOwnedCoursesForUser,
+} from "../../api/courses";
 
-const CourseInscriptionBarChart = ({ students, teachers }) => {
+function get_average(array) {
+  if (array.length === 0) return 0;
+  let sum = array.reduce((acc, val) => acc + val, 0);
+  return sum / array.length;
+}
+
+export function useAverageEnrollments(users, refreshData) {
+  const [students, setStudents] = useState(0);
+  const [teachers, setTeachers] = useState(0);
+
+  useEffect(() => {
+    if (!users) {
+      refreshData();
+      return;
+    }
+
+    const fetchAverages = async () => {
+      let students_list = [];
+      let teachers_list = [];
+      const filtered_users = users.filter((u) => u.role !== "admin");
+
+      for (const user of filtered_users) {
+        try {
+          if (user.role === "student") {
+            const enrolled = await getEnrolledCoursesForUser(user.uuid);
+            const count = Array.isArray(enrolled) ? enrolled.length : 0;
+            students_list.push(count);
+          } else if (user.role === "teacher") {
+            const owned = await getOwnedCoursesForUser(user.uuid);
+            const count = Array.isArray(owned) ? owned.length : 0;
+            teachers_list.push(count);
+          }
+        } catch (err) {
+          console.error(`Error for user ${user.uuid}:`, err);
+        }
+      }
+      setStudents(get_average(students_list));
+      setTeachers(get_average(teachers_list));
+    };
+
+    fetchAverages();
+  }, [users, refreshData]);
+
+  return { students, teachers };
+}
+
+const CourseInscriptionBarChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { users, refreshData } = useData();
+  const { students, teachers } = useAverageEnrollments(users, refreshData);
 
   return (
     <Box
@@ -30,11 +83,11 @@ const CourseInscriptionBarChart = ({ students, teachers }) => {
             fontWeight="bold"
             color={colors.greenAccent[500]}
           >
-            Average Course Inscription
+            Average Course Inscription/Ownership
           </Typography>
         </Box>
       </Box>
-      <BarChart students={9} teachers={2} />
+      <BarChart students={students} teachers={teachers} />
     </Box>
   );
 };
