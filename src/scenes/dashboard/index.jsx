@@ -63,13 +63,6 @@ function getPercentageActiveNotifs(users, totalUsers) {
   return Math.round((cant_active / totalUsers) * 100);
 }
 
-function getPercentageActiveBiometrics(users, totalUsers) {
-  if (totalUsers === 0) return 0;
-
-  const cant_bio = users.filter((user) => user.id_biometric !== null).length;
-  return Math.round((cant_bio / totalUsers) * 100);
-}
-
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -85,8 +78,6 @@ const Dashboard = () => {
   const [totalActive, setTotalActive] = useState(0);
   const [totalUnverified, setTotalUnverified] = useState(0);
   const [percentageActiveNotifs, setPercentageActiveNotifs] = useState(null);
-  const [percentageActiveBiometrics, setPercentageActiveBiometrics] =
-    useState(null);
 
   useEffect(() => {
     if (!users || !courses) {
@@ -117,9 +108,6 @@ const Dashboard = () => {
     }
 
     setPercentageActiveNotifs(getPercentageActiveNotifs(users, totalUsersVal));
-    setPercentageActiveBiometrics(
-      getPercentageActiveBiometrics(users, totalUsersVal)
-    );
   }, [users, profiles]);
 
   useEffect(() => {
@@ -269,16 +257,6 @@ const Dashboard = () => {
           subtitle="Activated Notifications"
           icon={
             <NotificationsActiveIcon
-              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-            />
-          }
-        />
-
-        <InfoBox
-          title={"CHECK"}
-          subtitle="Activated Biometrics"
-          icon={
-            <ClassIcon
               sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
             />
           }
