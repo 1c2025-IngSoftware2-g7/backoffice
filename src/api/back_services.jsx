@@ -7,3 +7,5 @@ export const LOGS =
   "https://one.newrelic.com/nr1-core/logger/logs-summary/NjczMzYxM3xBUE18QVBQTElDQVRJT058MTUwMTE5MjQyMA?account=6733613&duration=1800000&state=20964bc2-9fc1-5f32-ea31-5bdc7499df07";
 export const METRICS =
   "https://one.newrelic.com/dashboards/detail/NjczMzYxM3xWSVp8REFTSEJPQVJEfGRhOjEwMjgzMDQw?account=6733613&state=03d43fcd-fe2b-a720-ffb8-d1d11b98f3c2";
+export const ALERTS =
+  "https://one.newrelic.com/nr1-core/condition-builder/policy-entity/NjczMzYxM3xBSU9QU3xQT0xJQ1l8NjM2NDI0OA?account=6733613&state=cd451a7f-b847-ca4d-c8bc-22685ebc6449";

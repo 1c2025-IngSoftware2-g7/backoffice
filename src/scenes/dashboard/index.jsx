@@ -10,7 +10,7 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import { use, useEffect, useState } from "react";
 import UserStatusBarChart from "./UserStatusBarChart";
-import { LOGS, METRICS } from "../../api/back_services";
+import { LOGS, METRICS, ALERTS } from "../../api/back_services";
 import { useData } from "../../context/DataContext";
 import CourseInscriptionBarChart from "./CourseInscriptionBarChart";
 import InfoBox from "./infoBox";
@@ -124,6 +124,10 @@ const Dashboard = () => {
     window.open(METRICS, "_blank");
   };
 
+  const handleSeeAlerts = () => {
+    window.open(ALERTS, "_blank");
+  };
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -157,6 +161,19 @@ const Dashboard = () => {
           >
             <LinkIcon sx={{ mr: "10px" }} />
             See Logs
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100],
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+            }}
+            onClick={handleSeeAlerts}
+          >
+            <LinkIcon sx={{ mr: "10px" }} />
+            See Alerts
           </Button>
         </Box>
       </Box>
