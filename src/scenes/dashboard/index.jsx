@@ -56,11 +56,11 @@ function getTotalUsersWithoutProfile(totalUsers, profiles) {
   return totalUsers - cant_profiles;
 }
 
-function getPercentageActiveNotifs(users, totalUsers) {
-  if (totalUsers === 0) return 0;
+function getPercentageActiveNotifs(users) {
+  if (users.length === 0) return 0;
 
   const cant_active = users.filter((user) => user.notification === true).length;
-  return Math.round((cant_active / totalUsers) * 100);
+  return Math.round((cant_active / users.length) * 100);
 }
 
 const Dashboard = () => {
@@ -107,7 +107,7 @@ const Dashboard = () => {
       );
     }
 
-    setPercentageActiveNotifs(getPercentageActiveNotifs(users, totalUsersVal));
+    setPercentageActiveNotifs(getPercentageActiveNotifs(users));
   }, [users, profiles]);
 
   useEffect(() => {
