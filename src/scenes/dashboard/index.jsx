@@ -17,6 +17,7 @@ import InfoBox from "./infoBox";
 import AgesDistributionBarChart from "./AgesChart";
 import { useLocation } from "react-router-dom";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function getTotalAdmins(users) {
   const totalAdmins = users.filter((user) => user.role === "admin").length;
@@ -156,6 +157,7 @@ const Dashboard = () => {
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
+              marginRight: "20px",
             }}
             onClick={handleSeeLogs}
           >
@@ -172,7 +174,7 @@ const Dashboard = () => {
             }}
             onClick={handleSeeAlerts}
           >
-            <LinkIcon sx={{ mr: "10px" }} />
+            <NotificationsIcon sx={{ mr: "10px" }} />
             See Alerts
           </Button>
         </Box>
