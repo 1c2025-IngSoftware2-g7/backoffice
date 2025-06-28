@@ -19,7 +19,6 @@ const Topbar = () => {
   function handleLogout() {
     console.log("Logging out...");
     removeUserLoginData();
-    // window.location.reload();
     window.location.href = "/";
   }
 

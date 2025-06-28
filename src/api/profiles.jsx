@@ -13,13 +13,10 @@ export const getAllProfiles = async () => {
     },
   });
 
-  console.log("res", res);
-
   if (!res.ok) {
     console.error("Error fetching profiles:", res.status);
     throw new Error("Failed to fetch users");
   }
-  const response = await res.json();
-  console.log("ALL PROFILES", response);
-  return response;
+
+  return await res.json();
 };

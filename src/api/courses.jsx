@@ -80,9 +80,7 @@ export async function requestHelperPermissions(helper_id, course_id) {
       `Failed to fetch permissions for helper ${helper_id} in course ${course_id}`
     );
   }
-
-  let res = await response.json();
-  return res;
+  return await response.json();
 }
 
 export async function getEnrolledCoursesForUser(user_id) {

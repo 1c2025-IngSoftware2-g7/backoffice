@@ -82,7 +82,8 @@ export async function authFetch(url, options, message = null) {
         "You no longer have access to this page. Contact your administrator."
       );
       removeUserLoginData();
-      window.location.reload();
+      // window.location.reload();
+      window.location.href = "/";
       throw error;
     }
 
