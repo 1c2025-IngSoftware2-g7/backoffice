@@ -8,7 +8,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { removeUserLoginData } from "../../utils/storage";
 
 const Topbar = () => {
@@ -16,9 +16,11 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
-  function handleLogout(){
+  function handleLogout() {
+    console.log("Logging out...");
     removeUserLoginData();
-    window.location.reload();
+    // window.location.reload();
+    window.location.href = "/";
   }
 
   return (
@@ -28,8 +30,7 @@ const Topbar = () => {
         display="flex"
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
-      > 
-      </Box>
+      ></Box>
 
       {/* ICONS */}
       <Box display="flex">

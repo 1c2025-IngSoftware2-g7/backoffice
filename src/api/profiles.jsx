@@ -1,4 +1,3 @@
-//http://104.155.165.82/profiles
 // This file contains the API calls related to profiles management
 
 import { PROFILES, GATEWAY } from "./back_services";

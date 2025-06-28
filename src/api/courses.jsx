@@ -24,8 +24,6 @@ export const getAllCourses = async () => {
   return response;
 };
 
-export const getAllAuxTeachers = async () => {};
-
 export async function changeHelperPermissions(
   helper_id,
   course_id,
@@ -91,8 +89,6 @@ export async function getEnrolledCoursesForUser(user_id) {
   const endpoint = `${GATEWAY}/courses/enrolled_courses/${encodeURIComponent(
     user_id
   )}`;
-
-  console.log("GET ENROLL COURSES FOR ID ", user_id, "? endpoint ", endpoint);
 
   try {
     const response = await authFetch(
