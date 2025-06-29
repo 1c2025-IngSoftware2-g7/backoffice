@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import { Alert } from "@mui/material"; 
+import { Alert } from "@mui/material";
 import { removeUserLoginData } from "./utils/storage";
 
 const PrivateRoute = ({ children }) => {

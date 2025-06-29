@@ -216,12 +216,15 @@ const Dashboard = () => {
           }
         />
         <InfoBox
-          title={totalProfileError ?? "loading..."}
-          subtitle="Users without Profile"
-          error={true}
+          title={
+            percentageActiveNotifs !== null
+              ? percentageActiveNotifs + "%"
+              : "loading..."
+          }
+          subtitle="Activated Notifications"
           icon={
-            <ErrorOutlinedIcon
-              sx={{ color: colors.redAccent[600], fontSize: "26px" }}
+            <NotificationsActiveIcon
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
             />
           }
         />
@@ -266,20 +269,6 @@ const Dashboard = () => {
 
         {/* ROW 3 */}
         <AgesDistributionBarChart />
-
-        <InfoBox
-          title={
-            percentageActiveNotifs !== null
-              ? percentageActiveNotifs + "%"
-              : "loading..."
-          }
-          subtitle="Activated Notifications"
-          icon={
-            <NotificationsActiveIcon
-              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-            />
-          }
-        />
       </Box>
     </Box>
   );
